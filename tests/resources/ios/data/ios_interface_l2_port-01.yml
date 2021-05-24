@@ -1,0 +1,4 @@
+params:
+  mode: trunk
+  untagged_vlan: 10
+  negotiate: false
