@@ -1,0 +1,36 @@
+{% if bgp_params %}
+router bgp {{ bgp_params.asn }}
+{%   if bgp_params.router_id is defined and bgp_params.router_id is string %}
+ bgp router-id {{ bgp_params.router_id }}
+{%   endif %}
+{%   if bgp_params.use_default_af is defined and bgp_params.use_default_af is sameas false %}
+ no bgp default ipv4-unicast
+{%   endif %}
+{%   if bgp_params.cluster_id is defined and bgp_params.cluster_id is number %}
+ bgp cluster-id {{ bgp_params.cluster_id }}
+{%   endif %}
+!
+{% if bgp_params.peer_groups is defined %}
+{%   for peer_group in bgp_params.peer_groups %}
+{%     with indent=1, params=peer_group ,PEERGROUP_DEFINITION_ALLOWED=true %}
+{%       include 'ios_routing_bgp_peer_group.j2' %}
+{%     endwith %}
+{%   endfor %}
+{% endif %}
+!
+{%   if bgp_params.neighbors is defined %}
+{%     for params in bgp_params.neighbors %}
+{%       with indent=1, peer_groups = bgp_params.peer_groups | default([]), NEIGHBOR_DEFINITION_ALLOWED = true %}
+{%         include 'ios_routing_bgp_neighbor.j2' %}
+{%       endwith %}
+{%     endfor %}
+{% endif %}
+!
+{%   if bgp_params.address_families %}
+{%     for af in bgp_params.address_families %}
+{%       with params = af %}
+{%         include 'ios_routing_bgp_address_family.j2' %}
+{%       endwith %}
+{%     endfor %}
+{%   endif %}
+{% endif %}

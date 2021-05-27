@@ -1,5 +1,17 @@
+import ipaddress
 from typing import List, Union
 from typing_extensions import Literal
+import json
+import jmespath
+
+class FilterModule(object):
+
+    def __init__(self):
+        pass
+
+    def filters(self):
+        filters = {}
+        return filters
 
 class TemplateFilters(object):
 
@@ -57,7 +69,41 @@ class TemplateFilters(object):
 
         return vlan_range
 
+    @staticmethod
+    def ipaddr(ip_address: Union[ipaddress.IPv4Address, ipaddress.IPv4Interface, ipaddress.IPv4Network, ipaddress.IPv6Address, ipaddress.IPv6Interface, ipaddress.IPv6Network], operation: str = None):
+        address = None
+        for func in [ipaddress.ip_address, ipaddress.ip_interface, ipaddress.ip_network]:
+            if address is None:
+                try:
+                    address = func(ip_address)
+                except Exception as e:
+                    pass
+        if operation is None:
+            if address:
+                return True
+            else:
+                return False
+        if operation == "address":
+            if isinstance(address, (ipaddress.IPv4Address, ipaddress.IPv6Address)):
+                return address
+        raise ValueError("Invalid IP Given")
+
+    @staticmethod
+    def json_query(data: Union[list, dict], query: str):
+        return jmespath.search(query, data)
+
+    @staticmethod
+    def str_to_obj(string: str):
+        return eval(string)
+
+    @staticmethod
+    def to_json(data: Union[list, dict]) -> str:
+        return json.dumps(data)
 
     filters = {
-        "to_vlan_range": to_vlan_range.__func__
+        "to_vlan_range": to_vlan_range.__func__,
+        "ipaddr": ipaddr.__func__,
+        "json_query": json_query.__func__,
+        "str_to_obj": str_to_obj.__func__,
+        "to_json": to_json.__func__
     }

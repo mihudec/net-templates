@@ -7,6 +7,7 @@ from netcm.models.interfaces.vi import (
 
 class TestIosInterfaceL2(BaseTemplateTestIos):
 
+    TEST_CLASS = InterfaceSwitchportModel
     TEMPLATE_NAME = "ios_interface_l2_port"
 
     def test_01(self):
@@ -102,6 +103,7 @@ class TestIosInterfaceL2(BaseTemplateTestIos):
 
 class TestIosInterfaceBase(BaseTemplateTestIos):
 
+    TEST_CLASS = InterfaceModel
     TEMPLATE_NAME = "ios_interface_base"
 
     def test_01(self):

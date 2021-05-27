@@ -1,0 +1,17 @@
+params:
+  name: AAA-TEST-GROUP
+  servers:
+    - name: AAA-01
+      server: 1.1.1.1
+      key:
+        encryption_type: 0
+        value: P@ssw0rd
+      single_connection: true
+    - name: AAA-02
+      server: 2.2.2.2
+      key:
+        encryption_type: 0
+        value: P@ssw0rd
+      single_connection: true
+  vrf: TEST-VRF
+  src_interface: Loopback0

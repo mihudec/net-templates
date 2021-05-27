@@ -7,6 +7,7 @@ from netcm.models.BaseModels import BaseNetCmModel
 class BaseTemplateTestIos(BaseTemplateTest):
 
     VENDOR = 'ios'
+    TEST_CLASS = None
     TEMPLATE_NAME = ''
     RESOURCE_DIR = pathlib.Path(__file__).resolve().parent.parent.joinpath("resources").joinpath(VENDOR)
     ENVIRONMENT = BaseTemplateTest.get_vendor_environment(vendor=VENDOR)
@@ -37,25 +38,34 @@ class BaseTemplateTestIos(BaseTemplateTest):
                                 test_case["data"][k] = test_case["data"][k].dict()
 
                 have = template.render(**test_case["data"])
-                print(f"! Template: {self.TEMPLATE_NAME}\tTest: {test_case['test_name']}\n<< BEGIN >>\n{have}<< END >>")
+                print(f"! Template: {self.TEMPLATE_NAME}\tTest: {test_case['test_name']}\n<< BEGIN >>\n{have}<< END >>\n")
 
                 self.assertEqual(want, have)
 
     def get_test_cases_from_resources(self):
         test_cases = []
-        data_files = [x for x in self.RESOURCE_DIR.joinpath("data").iterdir() if x.is_file and x.suffix == ".yml" and x.stem.split("-")[0].startswith(self.TEMPLATE_NAME)]
-        results_files = [x for x in self.RESOURCE_DIR.joinpath("results").iterdir() if x.is_file and x.suffix == ".txt" and x.stem.split("-")[0].startswith(self.TEMPLATE_NAME)]
+        data_files = [x for x in self.RESOURCE_DIR.joinpath("data").iterdir() if x.is_file and x.suffix == ".yml" and x.stem.split("-")[0] == self.TEMPLATE_NAME]
+        results_files = [x for x in self.RESOURCE_DIR.joinpath("results").iterdir() if x.is_file and x.suffix == ".txt" and x.stem.split("-")[0] == self.TEMPLATE_NAME]
         data_file_names = [x.stem for x in data_files]
         results_file_names = [x.stem for x in results_files]
         assert set(data_file_names) == set(results_file_names)
 
         test_cases = [{"test_name": x, "data": None, "result": None} for x in data_file_names]
 
-
-
         for test_case in test_cases:
-            test_case["data"] = yaml.safe_load([x for x in data_files if x.stem == test_case["test_name"]][0].read_text())
+            if self.TEST_CLASS is not None:
+                data = None
+                raw_data = yaml.safe_load([x for x in data_files if x.stem == test_case["test_name"]][0].read_text())
+                params_keys = [x for x in raw_data.keys() if "params" in x]
+                if len(params_keys) == 1:
+                    data = dict(raw_data)
+                    data[params_keys[0]] = self.TEST_CLASS.parse_obj(data[params_keys[0]]).dict()
+                else:
+                    data = dict(raw_data)
+                test_case["data"] = data
+                print(test_case["data"])
+            else:
+                test_case["data"] = yaml.safe_load([x for x in data_files if x.stem == test_case["test_name"]][0].read_text())
             test_case["result"] = [x for x in results_files if x.stem == test_case["test_name"]][0].read_text()
-        print(test_cases)
         return test_cases
 

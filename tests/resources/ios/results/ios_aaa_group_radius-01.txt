@@ -1,0 +1,5 @@
+aaa group server radius AAA-TEST-GROUP
+ server name AAA-01
+ server name AAA-02
+ ip vrf forwarding TEST-VRF
+ ip radius source-interface Loopback0

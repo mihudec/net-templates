@@ -22,7 +22,7 @@
 {%       if params.allowed_vlans %}
  switchport trunk allowed vlan {{ params.allowed_vlans | to_vlan_range }}
 {%       else %}
-{%         if INCLUDE_DEFAULTS is sameas True %}
+{%         if INCLUDE_DEFAULTS is sameas true %}
  switchport trunk allowed vlan all
 {%       endif %}
 {%       endif %}
@@ -30,11 +30,11 @@
  switchport mode negotiate
 {%     endif %}
 {%   endif %}
-{%   if params.negotiation is sameas True %}
-{%     if INCLUDE_DEFAULTS is sameas True %}
+{%   if params.negotiation is sameas true %}
+{%     if INCLUDE_DEFAULTS is sameas true %}
  no switchport nonegotiate
 {%     endif %}
-{%   elif params.negotiation is sameas False %}
+{%   elif params.negotiation is sameas true %}
  switchport nonegotiate
 {%   endif %}
 {% endif %}
