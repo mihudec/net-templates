@@ -1,0 +1,13 @@
+tacacs server TACACS-01
+ address ipv4 192.0.2.1
+ key 0 SecretPassword123
+ single-connection
+tacacs server TACACS-02
+ address ipv4 192.0.2.2
+ key 0 SecretPassword123
+ single-connection
+aaa group server tacacs+ TACACS-GROUP-01
+ server name TACACS-01
+ server name TACACS-02
+ ip vrf forwarding MGMT-VRF
+ ip tacacs source-interface Loopback0

@@ -2,11 +2,13 @@ router bgp 64496
  bgp router-id 192.0.2.1
  bgp log-neighbor-changes
  no bgp default ipv4-unicast
+ !
  neighbor iBGP-RR peer-group
  neighbor iBGP-RR remote-as 64496
- neighbor iBGP-RR ha-mode sso
- neighbor iBGP-RR password 0 SuperSecret
  neighbor iBGP-RR update-source Loopback0
+ neighbor iBGP-RR password 0 SuperSecret
+ neighbor iBGP-RR ha-mode sso
+ !
  neighbor 192.0.2.2 peer-group iBGP-RR
  neighbor 192.0.2.2 description ROUTER-B
  neighbor 192.0.2.3 peer-group iBGP-RR
@@ -26,9 +28,8 @@ router bgp 64496
   redistribute connected route-map RM-A
  exit-address-family
  !
- address-family ipv4 vrf MNG-NOD
+ address-family ipv4 vrf VRF-B
   import path selection all
   import path limit 4
   redistribute connected route-map RM-A
  exit-address-family
-!

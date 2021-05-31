@@ -1,14 +1,33 @@
-import ipaddress
-from typing import List, Union
-from typing_extensions import Literal
 from netcm.models import models_map
-import json
-import jmespath
+from pydantic.typing import Union, List, Literal
+class FilterModule(object):
 
-class TemplateFilters(object):
+    def __init__(self):
+        pass
 
-    @staticmethod
-    def to_vlan_range(vlans: Union[List[int], Literal["none", "all"]]) -> str:
+    def filters(self):
+        filters = {
+            "to_vlan_range": self.to_vlan_range,
+            "str_to_obj": self.str_to_obj
+        }
+        return filters
+
+    def validate_data(self, data: dict, model: str) -> bool:
+        result = False
+        model_class = models_map.get(model)
+        if model_class is None:
+            result = False
+            # raise ValueError(f"Unknown model: '{model}'. Current models are: '{models_map}'")
+        else:
+            try:
+                model_object = model_class.parse_obj(data)
+                result = True
+            except Exception as e:
+                result = False
+
+        return result
+
+    def to_vlan_range(self, vlans: Union[List[int], Literal["none", "all"]]) -> str:
 
         if isinstance(vlans, str):
             if vlans == "none":
@@ -61,39 +80,5 @@ class TemplateFilters(object):
 
         return vlan_range
 
-    @staticmethod
-    def ipaddr(ip_address: Union[ipaddress.IPv4Address, ipaddress.IPv4Interface, ipaddress.IPv4Network, ipaddress.IPv6Address, ipaddress.IPv6Interface, ipaddress.IPv6Network], operation: str = None):
-        address = None
-        for func in [ipaddress.ip_address, ipaddress.ip_interface, ipaddress.ip_network]:
-            if address is None:
-                try:
-                    address = func(ip_address)
-                except Exception as e:
-                    pass
-        if operation is None:
-            if address:
-                return True
-            else:
-                return False
-        if operation == "address":
-            if isinstance(address, (ipaddress.IPv4Address, ipaddress.IPv6Address)):
-                return address
-        raise ValueError("Invalid IP Given")
-
-    @staticmethod
-    def json_query(data: Union[list, dict], query: str):
-        return jmespath.search(query, data)
-
-    @staticmethod
-    def str_to_obj(string: str):
+    def str_to_obj(self, string: str):
         return eval(string)
-
-    @staticmethod
-    def to_json(data: Union[list, dict]) -> str:
-        return json.dumps(data)
-
-    filters = {
-        "ipaddr": ipaddr.__func__,
-        "json_query": json_query.__func__,
-        "to_json": to_json.__func__
-    }

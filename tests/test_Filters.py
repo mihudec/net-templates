@@ -1,5 +1,5 @@
 import unittest
-from filters import TemplateFilters
+from filters import FilterModule, TemplateFilters
 
 
 class TestTemplateFiltersBase(unittest.TestCase):
@@ -42,6 +42,19 @@ class TestToVlanRange(TestTemplateFiltersBase):
                 have = TemplateFilters.to_vlan_range(test_case["data"])
                 self.assertEqual(want, have)
 
+
+class TestValidateData(TestTemplateFiltersBase):
+
+    TEST_CLASS = FilterModule
+
+    def test_01(self):
+        filter_object = self.TEST_CLASS()
+        test_data = {
+            "name": "Test",
+            "server": "192.0.2.1",
+            "timeout": 10
+        }
+        self.assertTrue(filter_object.validate_data(data=test_data, model="RadiusServer"))
 
 
 del TestTemplateFiltersBase

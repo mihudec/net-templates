@@ -40,6 +40,7 @@ class TestIosTacacsServer(BaseTemplateTestIos):
 
 class TestIosTacacsServerGroup(BaseTemplateTestIos):
 
+    TEST_CLASS = TacacsServerGroup
     TEMPLATE_NAME = 'ios_aaa_group_tacacs'
 
     def test_01(self):
@@ -47,9 +48,10 @@ class TestIosTacacsServerGroup(BaseTemplateTestIos):
         super().common_testbase(test_cases=test_cases)
 
 
-class TestIosRadiusServerGroup(BaseTemplateTestIos):
+class TestIosTacacsAll(BaseTemplateTestIos):
 
-    TEMPLATE_NAME = 'ios_aaa_group_radius'
+    TEST_CLASS = TacacsServerGroup
+    TEMPLATE_NAME = 'ios_aaa_tacacs_all'
 
     def test_01(self):
         test_cases = self.get_test_cases_from_resources()
@@ -58,6 +60,7 @@ class TestIosRadiusServerGroup(BaseTemplateTestIos):
 
 class TestIosRadiusServer(BaseTemplateTestIos):
 
+    TEST_CLASS = RadiusServer
     TEMPLATE_NAME = 'ios_aaa_server_radius'
 
     def test_01(self):
@@ -67,22 +70,42 @@ class TestIosRadiusServer(BaseTemplateTestIos):
                 "data": {
                     "params": RadiusServer(
                         name="RADIUS-01",
-                        server="1.2.3.4",
+                        server="192.0.2.1",
                         key=KeyBase(
                             encryption_type="0",
-                            value="P@ssw0rd"
+                            value="SecretPassword"
                         ),
                         single_connection=True
                     )
                 },
                 "result": (
                     "radius server RADIUS-01\n"
-                    " address ipv4 1.2.3.4\n"
-                    " key 0 P@ssw0rd\n"
+                    " address ipv4 192.0.2.1\n"
+                    " key 0 SecretPassword\n"
                     " single-connection\n"
                 )
             }
         ]
+        super().common_testbase(test_cases=test_cases)
+
+
+class TestIosRadiusServerGroup(BaseTemplateTestIos):
+
+    TEST_CLASS = RadiusServerGroup
+    TEMPLATE_NAME = 'ios_aaa_group_radius'
+
+    def test_01(self):
+        test_cases = self.get_test_cases_from_resources()
+        super().common_testbase(test_cases=test_cases)
+
+
+class TestIosRadiusAll(BaseTemplateTestIos):
+
+    TEST_CLASS = RadiusServerGroup
+    TEMPLATE_NAME = 'ios_aaa_radius_all'
+
+    def test_01(self):
+        test_cases = self.get_test_cases_from_resources()
         super().common_testbase(test_cases=test_cases)
 
 if __name__ == '__main__':

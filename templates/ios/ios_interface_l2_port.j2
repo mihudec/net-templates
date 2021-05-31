@@ -34,7 +34,7 @@
 {%     if INCLUDE_DEFAULTS is sameas true %}
  no switchport nonegotiate
 {%     endif %}
-{%   elif params.negotiation is sameas true %}
+{%   elif params.negotiation is sameas false %}
  switchport nonegotiate
 {%   endif %}
 {% endif %}

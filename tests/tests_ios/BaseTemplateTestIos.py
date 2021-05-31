@@ -59,7 +59,10 @@ class BaseTemplateTestIos(BaseTemplateTest):
                 params_keys = [x for x in raw_data.keys() if "params" in x]
                 if len(params_keys) == 1:
                     data = dict(raw_data)
-                    data[params_keys[0]] = self.TEST_CLASS.parse_obj(data[params_keys[0]]).dict()
+                    if isinstance(data[params_keys[0]], dict):
+                        data[params_keys[0]] = self.TEST_CLASS.parse_obj(data[params_keys[0]]).dict()
+                    elif isinstance(data[params_keys[0]], list):
+                        data[params_keys[0]] = [self.TEST_CLASS.parse_obj(x).dict() for x in data[params_keys[0]]]
                 else:
                     data = dict(raw_data)
                 test_case["data"] = data

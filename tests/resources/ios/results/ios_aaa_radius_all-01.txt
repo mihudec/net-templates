@@ -1,0 +1,13 @@
+radius server RADIUS-01
+ address ipv4 192.0.2.1
+ key 0 SecretPassword123
+ single-connection
+radius server RADIUS-02
+ address ipv4 192.0.2.2
+ key 0 SecretPassword123
+ single-connection
+aaa group server radius RADIUS-GROUP-01
+ server name RADIUS-01
+ server name RADIUS-02
+ ip vrf forwarding MGMT-VRF
+ ip radius source-interface Loopback0

@@ -3,7 +3,7 @@ import jinja2
 import pathlib
 from typing_extensions import Literal
 
-from filters.TemplateFilters import TemplateFilters
+from filters import FilterModule, TemplateFilters
 
 class BaseTemplateTest(unittest.TestCase):
 
@@ -23,4 +23,6 @@ class BaseTemplateTest(unittest.TestCase):
             undefined=jinja2.ChainableUndefined,
         )
         env.filters.update(TemplateFilters.filters)
+        filter_plugin = FilterModule()
+        env.filters.update(filter_plugin.filters())
         return env

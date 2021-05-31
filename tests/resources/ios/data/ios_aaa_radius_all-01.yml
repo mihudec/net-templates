@@ -1,0 +1,17 @@
+params:
+  - name: RADIUS-GROUP-01
+    vrf: MGMT-VRF
+    src_interface: Loopback0
+    servers:
+      - name: RADIUS-01
+        server: 192.0.2.1
+        single_connection: true
+        key:
+          encryption_type: 0
+          value: SecretPassword123
+      - name: RADIUS-02
+        server: 192.0.2.2
+        single_connection: true
+        key:
+          encryption_type: 0
+          value: SecretPassword123

@@ -1,0 +1,19 @@
+router bgp 64496
+ bgp router-id 192.0.2.1
+ !
+ neighbor iBGP-RR peer-group
+ neighbor iBGP-RR remote-as 64496
+ neighbor iBGP-RR update-source Loopback0
+ neighbor iBGP-RR password 0 SuperSecret
+ !
+ neighbor 192.0.2.2 peer-group iBGP-RR
+ neighbor 192.0.2.3 peer-group iBGP-RR
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family vpnv4
+  neighbor iBGP-RR send-community both
+  neighbor 192.0.2.2 activate
+  neighbor 192.0.2.3 activate
+ exit-address-family

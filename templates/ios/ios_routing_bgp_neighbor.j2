@@ -42,9 +42,9 @@ UNDEFINED
 {% if params %}
 {%   set id = getNeighborId(params, inventory | default({}) ) %}
 {%   if NEIGHBOR_DEFINITION_ALLOWED is sameas true %}
-{%     if params.peer_group %}
+{%     if params.peer_group | default(none) is not none  %}
 {%       set peer_group = peer_groups | json_query("[?name == '{}']".format(params.peer_group)) | first %}
-{%       if peer_group.asn is not defined %}
+{%       if peer_group.asn | default(none) is none %}
 {%         set asn = getNeighborASN(params) %}
 {{ ' ' * indent }}neighbor {{ id }} remote-as {{ asn }}
 {%       endif %}

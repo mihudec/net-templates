@@ -1,11 +1,14 @@
 bgp_params:
   asn: 64496
   router_id: 192.0.2.1
-  use_hostname_for_description: true
+  use_name_for_description: true
+  log_neighbor_changes: true
+  use_default_af: false
   peer_groups:
     - name: iBGP-RR
       asn: 64496
       src_interface: Loopback0
+      ha_mode: sso
       key:
         encryption_type: 0
         value: SuperSecret
@@ -19,9 +22,23 @@ bgp_params:
   address_families:
     - afi: ipv4
     - afi: vpnv4
+      additional_paths: install
       neighbors:
         - name: ROUTER-B
         - name: ROUTER-C
       peer_groups:
         - name: iBGP-RR
           send_community: both
+    - afi: ipv4
+      vrf: VRF-A
+      redistribute:
+        - type: connected
+          route_map: RM-A
+    - afi: ipv4
+      vrf: VRF-B
+      import_path:
+        limit: 4
+        selection: all
+      redistribute:
+        - type: connected
+          route_map: RM-A
