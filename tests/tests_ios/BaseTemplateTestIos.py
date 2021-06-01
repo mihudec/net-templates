@@ -4,6 +4,8 @@ import yaml
 from tests import BaseTemplateTest
 from netcm.models.BaseModels import BaseNetCmModel
 
+
+
 class BaseTemplateTestIos(BaseTemplateTest):
 
     VENDOR = 'ios'
@@ -28,12 +30,12 @@ class BaseTemplateTestIos(BaseTemplateTest):
                     if dict_params:
                         test_case["data"] = test_case["data"].dict(**dict_params)
                     else:
-                        test_case["data"] = test_case["data"].dict()
+                        test_case["data"] = test_case["data"].dict(**dict_params)
                 elif isinstance(test_case["data"], dict):
                     for k in test_case["data"].keys():
                         if isinstance(test_case["data"][k], BaseNetCmModel):
                             if dict_params:
-                                test_case["data"][k] = test_case["data"][k].dict(**dict_params)
+                                test_case["data"][k] = test_case["data"][k].serial_dict(**dict_params)
                             else:
                                 test_case["data"][k] = test_case["data"][k].dict()
 
@@ -60,9 +62,9 @@ class BaseTemplateTestIos(BaseTemplateTest):
                 if len(params_keys) == 1:
                     data = dict(raw_data)
                     if isinstance(data[params_keys[0]], dict):
-                        data[params_keys[0]] = self.TEST_CLASS.parse_obj(data[params_keys[0]]).dict()
+                        data[params_keys[0]] = self.TEST_CLASS.parse_obj(data[params_keys[0]]).serial_dict()
                     elif isinstance(data[params_keys[0]], list):
-                        data[params_keys[0]] = [self.TEST_CLASS.parse_obj(x).dict() for x in data[params_keys[0]]]
+                        data[params_keys[0]] = [self.TEST_CLASS.parse_obj(x).serial_dict() for x in data[params_keys[0]]]
                 else:
                     data = dict(raw_data)
                 test_case["data"] = data

@@ -1,6 +1,9 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
 from netcm.models.interfaces.vi import (
+    InterfaceCdpConfig,
+    InterfaceLldpConfig,
+    InterfaceBfdConfig,
     InterfaceModel,
     InterfaceSwitchportModel
 )
@@ -101,6 +104,204 @@ class TestIosInterfaceL2(BaseTemplateTestIos):
         super().common_testbase(test_cases=test_cases)
 
 
+class TestInterfaceDiscoveryCdp(BaseTemplateTestIos):
+
+    TEST_CLASS = InterfaceCdpConfig
+    TEMPLATE_NAME = 'ios_interface_discovery_cdp'
+
+    def test_01(self):
+        test_cases = [
+            {
+                "test_name": "Test-Enabled-Platform-Default-On_INCLUDE_DEFAULTS-Off",
+                "data": {
+                    "params": {
+                        "enabled": True
+                    },
+                    "PLATFORM_CDP_DEFAULT_ON": True,
+                    "INCLUDE_DEFAULTS": False
+                },
+                "result": ""
+            },
+            {
+                "test_name": "Test-Enabled-Platform-Default-On_INCLUDE_DEFAULTS-On",
+                "data": {
+                    "params": {
+                        "enabled": True
+                    },
+                    "PLATFORM_CDP_DEFAULT_ON": True,
+                    "INCLUDE_DEFAULTS": True
+                },
+                "result": (
+                    " cdp enable\n"
+                )
+            },
+            {
+                "test_name": "Test-Disabled-Platform-Default-On_INCLUDE_DEFAULTS-Off",
+                "data": {
+                    "params": {
+                        "enabled": False
+                    },
+                    "PLATFORM_CDP_DEFAULT_ON": True,
+                    "INCLUDE_DEFAULTS": False
+                },
+                "result": (
+                    " no cdp enable\n"
+                )
+            },
+            {
+                "test_name": "Test-Disabled-Platform-Default-On_INCLUDE_DEFAULTS-On",
+                "data": {
+                    "params": {
+                        "enabled": False
+                    },
+                    "PLATFORM_CDP_DEFAULT_ON": True,
+                    "INCLUDE_DEFAULTS": True
+                },
+                "result": (
+                    " no cdp enable\n"
+                )
+            },
+            {
+                "test_name": "Test-Enabled-Platform-Default-Off_INCLUDE_DEFAULTS-Off",
+                "data": {
+                    "params": {
+                        "enabled": True
+                    },
+                    "PLATFORM_CDP_DEFAULT_ON": False,
+                    "INCLUDE_DEFAULTS": False
+                },
+                "result": (
+                    " cdp enable\n"
+                )
+            },
+            {
+                "test_name": "Test-Enabled-Platform-Default-Off_INCLUDE_DEFAULTS-On",
+                "data": {
+                    "params": {
+                        "enabled": True
+                    },
+                    "PLATFORM_CDP_DEFAULT_ON": False,
+                    "INCLUDE_DEFAULTS": True
+                },
+                "result": (
+                    " cdp enable\n"
+                )
+            },
+            {
+                "test_name": "Test-Disabled-Platform-Default-Off_INCLUDE_DEFAULTS-Off",
+                "data": {
+                    "params": {
+                        "enabled": False
+                    },
+                    "PLATFORM_CDP_DEFAULT_ON": False,
+                    "INCLUDE_DEFAULTS": False
+                },
+                "result": ""
+            },
+            {
+                "test_name": "Test-Disabled-Platform-Default-Off_INCLUDE_DEFAULTS-On",
+                "data": {
+                    "params": {
+                        "enabled": False
+                    },
+                    "PLATFORM_CDP_DEFAULT_ON": False,
+                    "INCLUDE_DEFAULTS": True
+                },
+                "result": (
+                    " no cdp enable\n"
+                )
+            }
+        ]
+        super().common_testbase(test_cases=test_cases)
+
+
+
+class TestInterfaceDiscoveryLldp(BaseTemplateTestIos):
+
+    TEST_CLASS = InterfaceLldpConfig
+    TEMPLATE_NAME = 'ios_interface_discovery_lldp'
+
+    def test_01(self):
+        test_cases = [
+            {
+                "test_name": "Test_Transmit-On_Receive-On_Defaults-Off",
+                "data": {
+                    "params": {
+                        "transmit": True,
+                        "receive": True
+                    },
+                    "INCLUDE_DEFAULTS": False
+                },
+                "result": ""
+            },
+            {
+                "test_name": "Test_Transmit-On_Receive-On_Defaults-On",
+                "data": {
+                    "params": {
+                        "transmit": True,
+                        "receive": True
+                    },
+                    "INCLUDE_DEFAULTS": True
+                },
+                "result": (
+                    " lldp transmit\n"
+                    " lldp receive\n"
+                )
+            },
+            {
+                "test_name": "Test_Transmit-Off_Receive-Off_Defaults-Off",
+                "data": {
+                    "params": {
+                        "transmit": False,
+                        "receive": False
+                    },
+                    "INCLUDE_DEFAULTS": False
+                },
+                "result": (
+                    " no lldp transmit\n"
+                    " no lldp receive\n"
+                )
+            },
+            {
+                "test_name": "Test_Transmit-Off_Receive-Off_Defaults-On",
+                "data": {
+                    "params": {
+                        "transmit": False,
+                        "receive": False
+                    },
+                    "INCLUDE_DEFAULTS": True
+                },
+                "result": (
+                    " no lldp transmit\n"
+                    " no lldp receive\n"
+                )
+            }
+        ]
+        super().common_testbase(test_cases=test_cases)
+
+
+class TestIosInterfaceBfd(BaseTemplateTestIos):
+
+    TEST_CLASS = InterfaceBfdConfig
+    TEMPLATE_NAME = "ios_interface_bfd"
+
+    def test_01(self):
+        test_cases = [
+            {
+                "test_name": "Test-Interface-BFD-Template-01",
+                "data": {
+                    "params": InterfaceBfdConfig(
+                        template="BFD-Template-01"
+                    )
+                },
+                "result": (
+                    " bfd template BFD-Template-01\n"
+                )
+            }
+        ]
+        super().common_testbase(test_cases=test_cases)
+
+
 class TestIosInterfaceBase(BaseTemplateTestIos):
 
     TEST_CLASS = InterfaceModel
@@ -133,7 +334,6 @@ class TestIosInterfaceBase(BaseTemplateTestIos):
             }
         ]
         super().common_testbase(test_cases=test_cases)
-
 
 
 class TestIosInterfaceAll(BaseTemplateTestIos):
