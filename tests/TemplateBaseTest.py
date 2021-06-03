@@ -2,8 +2,8 @@ import unittest
 import jinja2
 import pathlib
 from typing_extensions import Literal
+from net_templates.filters import AnsibleFilters, CustomFilters
 
-from filters import FilterModule, TemplateFilters
 
 class BaseTemplateTest(unittest.TestCase):
 
@@ -22,7 +22,9 @@ class BaseTemplateTest(unittest.TestCase):
             lstrip_blocks=True,
             undefined=jinja2.ChainableUndefined,
         )
-        env.filters.update(TemplateFilters.filters)
-        filter_plugin = FilterModule()
-        env.filters.update(filter_plugin.filters())
+
+        ansible_filters = AnsibleFilters().filters()
+        custom_filters = CustomFilters().filters()
+        env.filters.update(ansible_filters)
+        env.filters.update(custom_filters)
         return env

@@ -39,7 +39,7 @@ jobs:
 
       - name: Test with Coverage
         run: |
-          coverage run --omit venv/*,tests/* -m unittest discover -s ./tests -p test_*.py
+          coverage run --include net_templates/filters/* -m unittest discover -s ./tests -p test_*.py
 
       - name: Coverage Report
         run: |
