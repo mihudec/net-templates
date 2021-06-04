@@ -2,7 +2,7 @@ import unittest
 import pathlib
 import yaml
 from tests import BaseTemplateTest
-from netcm.models.BaseModels import BaseNetCmModel
+from net_models.models.BaseModels import BaseNetCmModel
 
 
 

@@ -1,6 +1,6 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
-from netcm.models.routing.vi.RoutingProtocols import BfdTemplate, BfdAuthentication
+from net_models.models.routing.vi.RoutingProtocols import BfdTemplate, BfdAuthentication
 
 
 class TestIosRoutingBfdTemplate(BaseTemplateTestIos):

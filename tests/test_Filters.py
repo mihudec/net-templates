@@ -1,5 +1,5 @@
 import unittest
-from netcm.models.BaseModels import BaseNetCmModel
+from net_models.models.BaseModels import BaseNetCmModel
 from net_templates.filters import CustomFilters, AnsibleFilters
 from pydantic.error_wrappers import ValidationError
 

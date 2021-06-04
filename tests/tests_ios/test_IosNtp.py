@@ -1,6 +1,6 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
-from netcm.models.services.vi.ServerModels import NtpKey, NtpServer, NtpConfig
+from net_models.models.services.vi.ServerModels import NtpKey, NtpServer, NtpConfig
 
 
 class TestIosNtpAuthenticationKey(BaseTemplateTestIos):

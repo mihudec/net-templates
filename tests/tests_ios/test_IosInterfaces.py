@@ -1,6 +1,6 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
-from netcm.models.interfaces.vi import (
+from net_models.models.interfaces.vi import (
     InterfaceCdpConfig,
     InterfaceLldpConfig,
     InterfaceBfdConfig,

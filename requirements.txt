@@ -1,4 +1,4 @@
-netcm
+net_models
 pydantic
 jinja2
 pyyaml
