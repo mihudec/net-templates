@@ -3,6 +3,7 @@ import jinja2
 import pathlib
 from typing_extensions import Literal
 from net_templates.filters import AnsibleFilters, CustomFilters
+from net_templates.definitions import TEMPLATES_DIR
 
 
 class BaseTemplateTest(unittest.TestCase):
@@ -15,7 +16,7 @@ class BaseTemplateTest(unittest.TestCase):
     def get_vendor_environment(cls, vendor: Literal["ios"]) -> jinja2.environment.Environment:
         env = jinja2.environment.Environment(
             loader=jinja2.loaders.FileSystemLoader(
-                searchpath=pathlib.Path(__file__).parent.parent.joinpath("templates").joinpath(vendor)
+                searchpath=TEMPLATES_DIR.joinpath(vendor)
             ),
             autoescape=True,
             trim_blocks=True,
