@@ -1,6 +1,6 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
-from netcm.models.routing.vi.BgpModels import BgpNeighborBase, RoutingBgpProcess
+from net_models.models.routing.vi.BgpModels import BgpNeighborBase, RoutingBgpProcess
 
 
 class TestIosRoutingBgpProcess(BaseTemplateTestIos):

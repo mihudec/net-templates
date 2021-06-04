@@ -2,7 +2,7 @@ import ipaddress
 from typing import List, Union
 from typing_extensions import Literal
 from net_templates.filters import BaseFilter
-from netcm.models import models_map
+from net_models.models import models_map
 import json
 import jmespath
 

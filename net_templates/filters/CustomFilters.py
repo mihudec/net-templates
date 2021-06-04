@@ -1,5 +1,5 @@
-from netcm.models import models_map
-from netcm.models.BaseModels import BaseNetCmModel
+from net_models.models import models_map
+from net_models.models.BaseModels import BaseNetCmModel
 from pydantic.typing import Union, Dict, List, Literal
 from net_templates.filters import BaseFilter
 

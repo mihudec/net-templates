@@ -1,4 +1,4 @@
-from netcm.utils.get_logger import get_logger
+from net_models.utils.get_logger import get_logger
 
 
 class BaseFilter(object):
