@@ -1,0 +1,4 @@
+aaa authentication login default group TACACS-GROUP local
+aaa authentication login CONSOLE local
+aaa authentication enable default group TACACS-GROUP local
+aaa authentication enable CONSOLE enable
