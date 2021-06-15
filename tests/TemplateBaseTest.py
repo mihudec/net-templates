@@ -4,6 +4,9 @@ import pathlib
 from typing_extensions import Literal
 from net_templates.filters import AnsibleFilters, CustomFilters
 from net_templates.definitions import TEMPLATES_DIR
+from collections import MutableMapping
+from jinja2.exceptions import UndefinedError
+from jinja2.runtime import Context
 
 
 class BaseTemplateTest(unittest.TestCase):
@@ -22,6 +25,7 @@ class BaseTemplateTest(unittest.TestCase):
             trim_blocks=True,
             lstrip_blocks=True,
             undefined=jinja2.ChainableUndefined,
+            # undefined=jinja2.runtime.StrictUndefined
         )
 
         ansible_filters = AnsibleFilters().filters()

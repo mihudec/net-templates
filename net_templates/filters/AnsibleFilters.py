@@ -39,3 +39,6 @@ class AnsibleFilters(BaseFilter):
 
     def to_json(self, data: Union[list, dict]) -> str:
         return json.dumps(data)
+
+    def type_debug(self, var) -> str:
+        return str(type(var))
