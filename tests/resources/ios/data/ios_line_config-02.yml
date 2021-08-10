@@ -1,0 +1,21 @@
+---
+params:
+  line_type: console
+  line_range: [0]
+  exec_timeout: 600
+  aaa_config:
+    authentication: CONSOLE
+    authorization:
+      exec: CONSOLE
+      commands:
+        - level: 0
+          name: CONSOLE
+        - level: 15
+          name: CONSOLE
+    accounting:
+      exec: CONSOLE
+      commands:
+        - level: 1
+          name: CONSOLE
+        - level: 15
+          name: CONSOLE

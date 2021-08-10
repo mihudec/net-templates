@@ -1,0 +1,2 @@
+line console 0
+ exec-timeout 10 0

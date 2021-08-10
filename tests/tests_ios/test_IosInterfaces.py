@@ -1,11 +1,16 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
-from net_models.models.interfaces.vi import (
+from net_models.models.interfaces import (
     InterfaceCdpConfig,
     InterfaceLldpConfig,
     InterfaceBfdConfig,
     InterfaceModel,
     InterfaceSwitchportModel
+)
+from net_models.models.interfaces.L3InterfaceModels import (
+    InterfaceRouteportModel,
+    InterfaceIsisConfig, IsisMetricField, IsisInterfaceAuthentication,
+    InterfaceOspfConfig, InterfaceOspfAuthentication, KeyOspf, InterfaceOspfTimers
 )
 
 class TestIosInterfaceL2(BaseTemplateTestIos):
@@ -334,6 +339,120 @@ class TestIosInterfaceBase(BaseTemplateTestIos):
             }
         ]
         super().common_testbase(test_cases=test_cases)
+
+
+class TestIosInterfaceIsis(BaseTemplateTestIos):
+
+    TEMPLATE_NAME = "ios_interface_isis"
+
+    def test_01(self):
+        test_cases = [
+            {
+                "test_name": "Test-Model-01",
+                "data": {
+                    "params": InterfaceIsisConfig(
+                        process_id="test",
+                        circuit_type="level-2-only",
+                        network_type="point-to-point",
+                        metric=[
+                            IsisMetricField(level="level-1", metric=10),
+                            IsisMetricField(level="level-2", metric=10)
+                        ],
+                        authentication=IsisInterfaceAuthentication(
+                            mode="md5",
+                            keychain="ISIS-KEY"
+                        )
+                    )
+                },
+                "result": (
+                    " ip router isis test\n"
+                    " isis circuit-type level-2-only\n"
+                    " isis network point-to-point\n"
+                    " isis metric 10 level-1\n"
+                    " isis metric 10 level-2\n"
+                    " isis authentication mode md5\n"
+                    " isis authentication key-chain ISIS-KEY\n"
+                )
+            }
+        ]
+        super().common_testbase(test_cases=test_cases)
+
+
+class TestIosInterfaceOspf(BaseTemplateTestIos):
+
+    TEMPLATE_NAME = "ios_interface_ospf"
+
+    def test_01(self):
+        test_cases = [
+            {
+                "test_name": "Test-Model-01",
+                "data": {
+                    "params": InterfaceOspfConfig(
+                        process_id=1,
+                        area=0,
+                        cost=100,
+                        priority=100,
+                        network_type="point-to-point",
+                        authentication=InterfaceOspfAuthentication(
+                            method="message-digest",
+                            key=KeyOspf(
+                                value="SuperSecret",
+                                encryption_type=0
+                            )
+                        ),
+                        timers=InterfaceOspfTimers(
+                            hello=5,
+                            dead=15,
+                            retransmit=2
+                        ),
+                        bfd=True
+                    )
+                },
+                "result": (
+                    " ip ospf 1 area 0\n"
+                    " ip ospf network point-to-point\n"
+                    " ip ospf cost 100\n"
+                    " ip ospf priority 100\n"
+                    " ip ospf authentication message-digest\n"
+                    " ip ospf authentication-key SuperSec\n"
+                    " ip ospf hello-interval 5\n"
+                    " ip ospf dead-interval 15\n"
+                    " ip ospf retransmit-interval 2\n"
+                    " ip ospf bfd\n"
+                )
+            },
+            {
+                "test_name": "Test-Model-02",
+                "data": {
+                    "params": InterfaceOspfConfig(
+                        process_id=1,
+                        area=0,
+                        cost=100,
+                        priority=100,
+                        network_type="point-to-point",
+                        authentication=InterfaceOspfAuthentication(
+                            method="key-chain",
+                            keychain="OSPF-KEY"
+                        ),
+                        bfd=False
+                    )
+                },
+                "result": (
+                    " ip ospf 1 area 0\n"
+                    " ip ospf network point-to-point\n"
+                    " ip ospf cost 100\n"
+                    " ip ospf priority 100\n"
+                    " ip ospf authentication key-chain OSPF-KEY\n"
+                    " ip ospf bfd disable\n"
+                )
+            }
+        ]
+        super().common_testbase(test_cases=test_cases)
+
+
+class TestIosInterfaceL3(BaseTemplateTestIos):
+
+    TEMPLATE_NAME = "ios_interface_l3_port"
 
 
 class TestIosInterfaceAll(BaseTemplateTestIos):

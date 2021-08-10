@@ -1,7 +1,7 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
 from net_models.models.BaseModels.SharedModels import KeyBase
-from net_models.models.services.vi.ServerModels import (
+from net_models.models.services.ServerModels import (
     TacacsServer,
     TacacsServerGroup,
     RadiusServer,

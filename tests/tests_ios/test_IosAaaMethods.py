@@ -1,6 +1,6 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
-from net_models.models.services.vi.AaaMethods import *
+from net_models.models.services.cisco_ios.AaaMethods import *
 
 
 class TestIosAaaAction(BaseTemplateTestIos):
@@ -46,7 +46,7 @@ class TestIosAaaAction(BaseTemplateTestIos):
 class TestIosAaaAuthentication(BaseTemplateTestIos):
 
     TEST_CLASS = IosAaaAuthentication
-    TEMPLATE_NAME = 'ios_aaa_authentication_methods'
+    TEMPLATE_NAME = 'ios_aaa_authentication'
 
     def test_01(self):
         test_cases = self.get_test_cases_from_resources()
@@ -67,6 +67,16 @@ class TestIosAaaAccounting(BaseTemplateTestIos):
 
     TEST_CLASS = IosAaaAccounting
     TEMPLATE_NAME = 'ios_aaa_accounting'
+
+    def test_01(self):
+        test_cases = self.get_test_cases_from_resources()
+        super().common_testbase(test_cases=test_cases)
+
+
+class TestIosAaaConfig(BaseTemplateTestIos):
+
+    TEST_CLASS = IosAaaConfig
+    TEMPLATE_NAME = 'ios_aaa_config'
 
     def test_01(self):
         test_cases = self.get_test_cases_from_resources()

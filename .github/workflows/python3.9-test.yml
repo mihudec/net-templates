@@ -19,13 +19,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout net_models
         uses: actions/checkout@v2
+        with:
+          repository: mihudec/net_models
+          path: './net_models'
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+
+      - name: Install net_models
+        run: |
+          cd ./net_models/
+          python setup.py install
+          cd ..
+
+      - name: Checkout net_templates
+        uses: actions/checkout@v2
 
       - name: Install dependencies
         run: |

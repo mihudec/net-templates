@@ -1,5 +1,5 @@
 from net_models.models import models_map
-from net_models.models.BaseModels import BaseNetCmModel
+from net_models.models.BaseModels import BaseNetModel
 from pydantic.typing import Union, Dict, List, Literal
 from net_templates.filters import BaseFilter
 
@@ -8,7 +8,7 @@ class CustomFilters(BaseFilter):
 
     def to_model(self, data: Union[Dict, List], model: str, many=True, serialize=True, dict_params=None) -> Union[dict, list]:
         model_data = None
-        model_class: BaseNetCmModel = models_map.get(model)
+        model_class: BaseNetModel = models_map.get(model)
         if model_class is None:
             msg = f"Unknown model: '{model}'. Current models are: '{models_map}'."
             self.logger.error(msg=msg)
@@ -51,10 +51,10 @@ class CustomFilters(BaseFilter):
             return False
         if model_data is None:
             return False
-        elif isinstance(model_data, BaseNetCmModel):
+        elif isinstance(model_data, BaseNetModel):
             return True
         elif isinstance(model_data, list):
-            if all([isinstance(x, BaseNetCmModel) for x in model_data]):
+            if all([isinstance(x, BaseNetModel) for x in model_data]):
                 return True
             else:
                 return False

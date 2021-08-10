@@ -1,0 +1,9 @@
+line console 0
+ exec-timeout 10 0
+ login authentication CONSOLE
+ authorization exec CONSOLE
+ authorization commands 0 CONSOLE
+ authorization commands 15 CONSOLE
+ accounting exec CONSOLE
+ accounting commands 1 CONSOLE
+ accounting commands 15 CONSOLE

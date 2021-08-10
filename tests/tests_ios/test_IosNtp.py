@@ -1,6 +1,6 @@
 import unittest
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
-from net_models.models.services.vi.ServerModels import NtpKey, NtpServer, NtpConfig
+from net_models.models.services.ServerModels import NtpKey, NtpServer, NtpConfig, NtpAccessGroups
 
 
 class TestIosNtpAuthenticationKey(BaseTemplateTestIos):
@@ -120,6 +120,74 @@ class TestNtpSession(BaseTemplateTestIos):
                 },
                 "result": (
                     "ntp server vrf TEST-VRF 192.0.2.1 prefer\n"
+                )
+            }
+        ]
+        super().common_testbase(test_cases=test_cases)
+
+
+class TestIosNtpConfig(BaseTemplateTestIos):
+
+    TEST_CLASS = NtpConfig
+    TEMPLATE_NAME = 'ios_ntp'
+
+    def test_01(self):
+        test_cases = [
+            {
+                "test_name": "Test-Model-01",
+                "data": {
+                    "params": NtpConfig(
+                        authenticate=True,
+                        servers=[
+                            NtpServer(
+                                server="192.0.2.1",
+                                vrf="MGMT",
+                                key_id=1,
+                                prefer=True
+                            ),
+                            NtpServer(
+                                server="192.0.2.2",
+                                vrf="MGMT",
+                                key_id=1
+                            )
+                        ],
+                        ntp_keys=[
+                            NtpKey(
+                                value="SuperSecret",
+                                encryption_type=0,
+                                key_id=1,
+                                method="md5",
+                                trusted=True
+                            )
+                        ],
+                        peers=[
+                            NtpServer(
+                                server="192.0.2.10",
+                                vrf="MGMT",
+                                key_id=1
+                            )
+                        ],
+                        access_groups=NtpAccessGroups(
+                            serve_only=1,
+                            query_only=2,
+                            serve=3,
+                            peer=4
+                        ),
+                        src_interface="Loopback0"
+                    )
+                },
+                "result": (
+                    "ntp authenticate\n"
+                    "ntp authentication-key 1 md5 SuperSecret 0\n"
+                    "ntp trusted-key 1\n"
+                    "ntp source Loopback0\n"
+                    "ntp server vrf MGMT 192.0.2.1 key 1 prefer\n"
+                    "ntp server vrf MGMT 192.0.2.2 key 1\n"
+                    "ntp peer vrf MGMT 192.0.2.10 key 1\n"
+                    "ntp access-group serve-only 1\n"
+                    "ntp access-group query-only 2\n"
+                    "ntp access-group serve 3\n"
+                    "ntp access-group peer 4\n"
                 )
             }
         ]

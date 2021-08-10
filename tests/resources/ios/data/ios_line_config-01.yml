@@ -1,0 +1,21 @@
+---
+params:
+  line_type: console
+  line_range: [0]
+  exec_timeout: 600
+  aaa_config:
+    authentication: default
+    authorization:
+      exec: default
+      commands:
+        - level: 0
+          name: default
+        - level: 15
+          name: default
+    accounting:
+      exec: default
+      commands:
+        - level: 1
+          name: default
+        - level: 15
+          name: default

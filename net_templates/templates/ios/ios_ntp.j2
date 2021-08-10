@@ -3,7 +3,7 @@
 ntp authenticate
 {%   endif %}
 {%   if params.keys | default(none) is not none %}
-{%     with params = params.keys %}
+{%     with params = params.ntp_keys %}
 {%       include 'ios_ntp_keys.j2' %}
 {%     endwith %}
 {%   endif %}
@@ -25,5 +25,9 @@ ntp source {{ params.src_interface }}
 {%       endwith %}
 {%     endfor %}
 {%   endif %}
-{%   include 'ios_ntp_peers.j2' %}
+{%   if params.access_groups | default(none) is not none %}
+{%     with params = params.access_groups %}
+{%         include 'ios_ntp_access_groups.j2' %}
+{%     endwith %}
+{%   endif %}
 {% endif %}

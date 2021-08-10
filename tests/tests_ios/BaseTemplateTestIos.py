@@ -2,8 +2,7 @@ import unittest
 import pathlib
 import yaml
 from tests import BaseTemplateTest
-from net_models.models.BaseModels import BaseNetCmModel
-
+from net_models.models.BaseModels import BaseNetModel
 
 
 class BaseTemplateTestIos(BaseTemplateTest):
@@ -24,20 +23,22 @@ class BaseTemplateTestIos(BaseTemplateTest):
 
                 dict_params = None
                 if "dict_params" in test_case.keys():
-                    dict_params = dict_params
+                    dict_params = test_case["dict_params"]
 
-                if isinstance(test_case["data"], BaseNetCmModel):
+                if isinstance(test_case["data"], BaseNetModel):
                     if dict_params:
-                        test_case["data"] = test_case["data"].dict(**dict_params)
+                        test_case["data"] = test_case["data"].serial_dict(**dict_params)
                     else:
-                        test_case["data"] = test_case["data"].dict(**dict_params)
+                        test_case["data"] = test_case["data"].serial_dict(**dict_params)
                 elif isinstance(test_case["data"], dict):
                     for k in test_case["data"].keys():
-                        if isinstance(test_case["data"][k], BaseNetCmModel):
+                        print(k)
+                        if isinstance(test_case["data"][k], BaseNetModel):
                             if dict_params:
                                 test_case["data"][k] = test_case["data"][k].serial_dict(**dict_params)
                             else:
-                                test_case["data"][k] = test_case["data"][k].dict()
+                                test_case["data"][k] = test_case["data"][k].serial_dict()
+                print(test_case["data"])
 
                 have = template.render(**test_case["data"])
                 print(f"! Template: {self.TEMPLATE_NAME}\tTest: {test_case['test_name']}\n<< BEGIN >>\n{have}<< END >>\n")

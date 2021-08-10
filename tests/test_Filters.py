@@ -1,5 +1,5 @@
 import unittest
-from net_models.models.BaseModels import BaseNetCmModel
+from net_models.models.BaseModels import BaseNetModel
 from net_templates.filters import CustomFilters, AnsibleFilters
 from pydantic.error_wrappers import ValidationError
 
@@ -61,7 +61,7 @@ class TestToModel(TestTemplateFiltersBase):
         }
         model = "RadiusServer"
         model_data = CustomFilters().to_model(data=data, model=model, many=False, serialize=False)
-        self.assertIsInstance(model_data, BaseNetCmModel)
+        self.assertIsInstance(model_data, BaseNetModel)
 
     def test_valid_list_01(self):
         data = [
@@ -86,8 +86,8 @@ class TestToModel(TestTemplateFiltersBase):
         model_data = CustomFilters().to_model(data=data, model=model, many=True, serialize=False)
         if not isinstance(model_data, list):
             self.fail("Model data is not list.")
-        elif not all([isinstance(x, BaseNetCmModel) for x in model_data]):
-            self.fail("Some elements are not instance of BaseNetCmModel")
+        elif not all([isinstance(x, BaseNetModel) for x in model_data]):
+            self.fail("Some elements are not instance of BaseNetModel")
 
     def test_valid_02(self):
         data = {
