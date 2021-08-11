@@ -1,10 +1,17 @@
 {% if params | default(none) is not none %}
+{# Encapsulation #}
+{%   if params.encapsulation | default(none) is not none %}
+{%     if params.encapsulation.encapsulation == 'dot1q' %}
+ encapsulation dot1q {{ params.encapsulation.tag }}{% if params.encapsulation.native | default(none) is sameas true %} native{% endif %}
+
+{%     endif %}
+{%   endif %}
 {# VRF #}
-{%   if param.vrf | default(none) is not None %}
+{%   if params.vrf | default(none) is not none %}
  vrf forwarding {{ params.vrf }}
 {%   endif %}
 {# IP MTU #}
-{%   if param.ip_mtu | default(none) is not None %}
+{%   if params.ip_mtu | default(none) is not none %}
  ip mtu {{ params.ip_mtu }}
 {%   endif %}
 {# OSPF Section #}

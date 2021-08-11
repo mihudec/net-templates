@@ -1,0 +1,12 @@
+params:
+  name: TEST-VRF-1
+  rd: "1:1"
+  address_families:
+    - afi: ipv4
+      safi: unicast
+      route_targets:
+        - rt: "1:1"
+          action: both
+        - rt: "1:1"
+          action: both
+          rt_type: stitching

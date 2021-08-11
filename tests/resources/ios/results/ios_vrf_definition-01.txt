@@ -1,0 +1,9 @@
+vrf definition TEST-VRF-1
+ rd 1:1
+ !
+ address-family ipv4 unicast
+  route-target export 1:1
+  route-target import 1:1
+  route-target export 1:1 stitching
+  route-target import 1:1 stitching
+ exit-address-family
