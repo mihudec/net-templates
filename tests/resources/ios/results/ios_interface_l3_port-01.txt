@@ -1,0 +1,2 @@
+ encapsulation dot1q 100
+ vrf forwarding TEST-VRF

@@ -1,1 +1,1 @@
-from tests.TemplateBaseTest import BaseTemplateTest
+from .TemplateBaseTest import BaseTemplateTest

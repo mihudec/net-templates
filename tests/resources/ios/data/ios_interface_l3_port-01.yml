@@ -1,0 +1,7 @@
+# InterfaceRouteportModel
+params:
+  vrf: TEST-VRF
+  encapsulation:
+    encapsulation: dot1q
+    tag: 100
+    native: false

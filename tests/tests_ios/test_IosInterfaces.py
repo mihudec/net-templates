@@ -13,6 +13,7 @@ from net_models.models.interfaces.L3InterfaceModels import (
     InterfaceOspfConfig, InterfaceOspfAuthentication, KeyOspf, InterfaceOspfTimers
 )
 
+
 class TestIosInterfaceL2(BaseTemplateTestIos):
 
     TEST_CLASS = InterfaceSwitchportModel
@@ -453,6 +454,11 @@ class TestIosInterfaceOspf(BaseTemplateTestIos):
 class TestIosInterfaceL3(BaseTemplateTestIos):
 
     TEMPLATE_NAME = "ios_interface_l3_port"
+    TEST_CLASS = InterfaceRouteportModel
+
+    def test_resources(self):
+        self.common_testbase(test_cases=self.get_test_cases_from_resources())
+
 
 
 class TestIosInterfaceAll(BaseTemplateTestIos):
