@@ -57,6 +57,19 @@ class TestIosInterfaceIpv4(BaseTemplateTestIos):
                     "  service-policy output SP-OUT\n"
                     "  shutdown\n"
                 )
+            },
+            {
+                "test_name": "Test-02",
+                "data": {
+                    "params": ServiceInstance(
+                        si_id=1,
+                        encapsulation=InterfaceEncapsulation(encapsulation_type='untagged')
+                    )
+                },
+                "result": (
+                    " service instance 1 ethernet\n"
+                    "  encapsulation untagged\n"
+                )
             }
         ]
         self.maxDiff = None
