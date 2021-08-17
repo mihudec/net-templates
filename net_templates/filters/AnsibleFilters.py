@@ -19,6 +19,7 @@ class AnsibleFilters(BaseFilter):
             if address is None:
                 try:
                     address = func(ip_address)
+                    print(func)
                 except Exception as e:
                     pass
         if operation is None:
@@ -27,8 +28,13 @@ class AnsibleFilters(BaseFilter):
             else:
                 return False
         if operation == "address":
-            if isinstance(address, (ipaddress.IPv4Address, ipaddress.IPv6Address)):
-                return address
+            if isinstance(address, (ipaddress.IPv4Interface, ipaddress.IPv6Interface)):
+                return str(address.ip)
+            elif isinstance(address, (ipaddress.IPv4Address, ipaddress.IPv6Address)):
+                return str(address)
+        elif operation == "netmask":
+            if isinstance(address, (ipaddress.IPv4Interface, ipaddress.IPv6Interface)):
+                return str(address.with_netmask).split("/")[1]
         raise ValueError("Invalid IP Given")
 
     def json_query(self, data: Union[list, dict], query: str):

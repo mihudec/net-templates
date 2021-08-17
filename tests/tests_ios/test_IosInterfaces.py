@@ -5,7 +5,8 @@ from net_models.models.interfaces import (
     InterfaceLldpConfig,
     InterfaceBfdConfig,
     InterfaceModel,
-    InterfaceSwitchportModel
+    InterfaceSwitchportModel,
+    InterfaceServicePolicy
 )
 from net_models.models.interfaces.L3InterfaceModels import (
     InterfaceRouteportModel,
@@ -459,6 +460,47 @@ class TestIosInterfaceL3(BaseTemplateTestIos):
     def test_resources(self):
         self.common_testbase(test_cases=self.get_test_cases_from_resources())
 
+
+class TestIosInterfaceServiceInstance(BaseTemplateTestIos):
+
+    TEMPLATE_NAME = "ios_interface_service_policy"
+
+    def test_01(self):
+        test_cases = [
+            {
+                "test_name": "Test-01",
+                "data": {
+                    "params": InterfaceServicePolicy(input="SP-INPUT", output="SP-OUTPUT")
+                },
+                "result": (
+                    " service-policy input SP-INPUT\n"
+                    " service-policy output SP-OUTPUT\n"
+                )
+            },
+            {
+                "test_name": "Test-02",
+                "data": {
+                    "params": InterfaceServicePolicy(input="SP-INPUT", output="SP-OUTPUT"),
+                    "indent": 3
+                },
+                "result": (
+                    "   service-policy input SP-INPUT\n"
+                    "   service-policy output SP-OUTPUT\n"
+                )
+            },
+            {
+                "test_name": "Test-03",
+                "data": {
+                    "params": InterfaceServicePolicy(input="SP-INPUT", output="SP-OUTPUT"),
+                    "state": 'absent'
+                },
+                "result": (
+                    " no service-policy input SP-INPUT\n"
+                    " no service-policy output SP-OUTPUT\n"
+                )
+            }
+        ]
+        self.common_testbase(test_cases=test_cases)
 
 
 class TestIosInterfaceAll(BaseTemplateTestIos):
