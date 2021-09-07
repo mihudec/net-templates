@@ -40,7 +40,7 @@ class TestIosInterfaceIpv4(BaseTemplateTestIos):
                             ingress=RewriteOperation(
                                 action='pop',
                                 tag=1,
-                                symetric=True
+                                symmetric=True
                             )
                         ),
                         enabled=False
@@ -50,7 +50,7 @@ class TestIosInterfaceIpv4(BaseTemplateTestIos):
                     " service instance 1 ethernet\n"
                     "  description Test Service Instance\n"
                     "  encapsulation dot1q 5\n"
-                    "  rewrite ingress tag pop 1 symetric\n"
+                    "  rewrite ingress tag pop 1 symmetric\n"
                     "  l2protocol peer cdp\n"
                     "  bridge-domain 5\n"
                     "  service-policy input SP-IN\n"

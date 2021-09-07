@@ -5,5 +5,7 @@
 {%   if params.encapsulation_type == 'dot1q' %}
   encapsulation dot1q {% if params.outer_tag | default(none) is not none %}{{ dot1qEncapsulation(params=params.outer_tag) }}{% if params.inner_tag | default(none) is not none %} second-dot1q {{ dot1qEncapsulation(params=params.inner_tag) }}{% endif %}{% endif %}
 
+{%   elif params.encapsulation_type == 'untagged' %}
+ encapsulation untagged
 {%   endif %}
 {% endif %}

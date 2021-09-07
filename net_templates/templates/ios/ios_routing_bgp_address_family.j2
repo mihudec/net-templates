@@ -2,7 +2,7 @@
 {%   if params.afi in ['vpnv4', 'l2vpn'] %}
 {%     set NEIGHBOR_DEFINITION_ALLOWED = false %}
 {%     set PEERGROUP_DEFINITION_ALLOWED = false %}
-{%     set peer_groups = routing.bgp.peer_groups | default([]) %}
+{%     set peer_groups = bgp_params.peer_groups | default([]) %}
 {%   else %}
 {%     set NEIGHBOR_DEFINITION_ALLOWED = true %}
 {%     set PEERGROUP_DEFINITION_ALLOWED = true %}

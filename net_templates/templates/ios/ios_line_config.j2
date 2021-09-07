@@ -1,5 +1,5 @@
 {% if params | default(none) is not none %}
-line {{ params.line_type }} {{ params.line_range[0] }}{% if params.line_range.length == 2 %} {{ params.line_range[1] }}{% endif %}
+line {{ params.line_type }} {{ params.line_range[0] }}{% if params.line_range | length == 2 %} {{ params.line_range[1] }}{% endif %}
 
 {%   if params.exec_timeout | default(none) is not none %}
  exec-timeout {{ params.exec_timeout // 60 }} {{ params.exec_timeout % 60 }}

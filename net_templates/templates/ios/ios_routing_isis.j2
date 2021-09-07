@@ -1,0 +1,45 @@
+{# TODO: FINISH Model RoutingIsisProcess #}
+{% if params | default(none) is not none %}
+router isis {{ params.process_id }}
+ net {{ params.network.area_id }}.{{ params.network.system_id }}.{{ params.network.nsel }}
+{%   if params.is_type | default(none) is not none %}
+ is-type {{ params.is_type }}
+{%   endif %}
+{# Authentication Section #}
+{%   if params.authentication | default(none) is not none %}
+{%     for auth_mode in params.authentication.mode %}
+ authentication mode {{ auth_mode.auth_mode }} {{ auth_mode.level }}
+{%     endfor %}
+{%     for auth_keychain in params.authentication.keychain %}
+ authentication key-chain {{ auth_keychain.keychain }} {{ auth_keychain.level }}
+{%     endfor %}
+{%   endif %}
+{%   if params.metric_style | default(none) is not none %}
+ metric-style {{ params.metric_style }}
+{%   endif %}
+{%   if params.fast_flood | default(none) is not none %}
+ fast-flood {{ params.fast_flood }}
+{%   endif %}
+{%   if params.lsp | default(none) is not none %}
+{%     if params.lsp.max_lifetime | default(none) is not none %}
+ max-lsp-lifetime {{ params.lsp.max_lifetime }}
+{%     endif %}
+{%     if params.lsp.refresh_interval | default(none) is not none %}
+ lsp-refresh-interval {{ params.lsp.refresh_interval }}
+{%     endif %}
+{%     if params.lsp.gen_intervals | default(none) is not none %}
+{%       for lgi in params.lsp.gen_intervals %}
+ lsp-gen-interval{% if lgi.level | default(none) is not none %} {{ lgi.level }}{% endif %} {{ lgi.interval }}{% if lgi.init_wait | default(none) is not none %} {{ lgi.init_wait }}{% if lgi.wait | default(none) is not none%} {{ lgi.wait }}{% endif %}{% endif %}
+
+{%       endfor %}
+{%     endif %}
+{%   endif %}
+{# Passive Interfaces Section #}
+{% include 'ios_routing_igp_passive_interfaces.j2' %}
+{# Extra Config Section #}
+{%   if params.extra_config | default(none) is not none %}
+{%     with indent=1 %}
+{%       include 'ios_common_extra_config.j2' %}
+{%     endwith %}
+{%   endif %}
+{% endif %}

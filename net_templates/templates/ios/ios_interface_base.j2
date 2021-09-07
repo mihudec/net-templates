@@ -4,16 +4,42 @@
 {%   set name, params = name, params %}
 {% endif %}
 interface {{ name }}
-{% if params.description is defined %}
+{% if params.description | default(none) is not none %}
  description {{ params.description }}
+{% endif %}
+{% if params.discovery_protocols | default(none) is not none %}
+{%   if params.discovery_protocols.cdp | default(none) is not none %}
+{%     with params = params.discovery_protocols.cdp %}
+{%       include 'ios_interface_discovery_cdp.j2' %}
+{%     endwith %}
+{%   endif %}
+{% endif %}
+{% if params.mtu | default(none) is not none %}
+ mtu {{ params.mtu }}
 {% endif %}
 {% if params.l2_port is defined and params.l2_port is mapping %}
 {%   with params = params.l2_port %}
-{%     include 'ios_interface_l2.j2' %}
+{%     include 'ios_interface_l2_port.j2' %}
 {%   endwith %}
 {% endif %}
 {% if params.l3_port is defined and params.l3_port is mapping %}
 {%   with params = params.l3_port %}
-{%     include 'ios_interface_l3.j2' %}
+{%     include 'ios_interface_l3_port.j2' %}
+{%   endwith %}
+{% endif %}
+{% if params.service_policy | default(none) is not none %}
+{%   with params = params.service_policy %}
+{%     include 'ios_interface_service_policy.j2' %}
+{%   endwith %}
+{% endif %}
+{% if params.service_instances | default(none) is not none %}
+{%   for params in params.service_instances %}
+{%     include 'ios_interface_service_instance.j2' %}
+{%   endfor %}
+{% endif %}
+{% include 'ios_interface_shutdown.j2' %}
+{% if params.extra_config | default(none) is not none %}
+{%   with extra_config = params.extra_config, indent = 1 %}
+{%   include 'ios_common_extra_config.j2' %}
 {%   endwith %}
 {% endif %}

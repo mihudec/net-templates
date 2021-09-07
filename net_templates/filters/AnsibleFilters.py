@@ -19,7 +19,6 @@ class AnsibleFilters(BaseFilter):
             if address is None:
                 try:
                     address = func(ip_address)
-                    print(func)
                 except Exception as e:
                     pass
         if operation is None:

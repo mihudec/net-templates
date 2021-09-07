@@ -1,0 +1,7 @@
+{% if extra_config | default(none) is not none %}
+{%   with indent = indent | default(0) %}
+{%     for extra_config_line in extra_config %}
+{{ ' ' * indent }}{{ extra_config_line }}
+{%     endfor %}
+{%   endwith %}
+{% endif %}

@@ -10,6 +10,12 @@
 {%   if params.vrf | default(none) is not none %}
  vrf forwarding {{ params.vrf }}
 {%   endif %}
+{# IPv4 Section #}
+{%   if params.ipv4 | default(none) is not none %}
+{%     with params = params.ipv4 %}
+{% include 'ios_interface_ipv4.j2' %}
+{%     endwith %}
+{%   endif %}
 {# IP MTU #}
 {%   if params.ip_mtu | default(none) is not none %}
  ip mtu {{ params.ip_mtu }}

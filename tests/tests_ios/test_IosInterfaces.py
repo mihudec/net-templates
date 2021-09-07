@@ -514,7 +514,15 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
                 "data": {
                     "interfaces": {
                         "Vlan1": {
-                            "description": "Test"
+                            "description": "Test",
+                            "l3_port": {
+                                "ipv4": {
+                                    "addresses": [
+                                        {"address": "192.0.2.1/24"}
+                                    ]
+                                }
+                            },
+                            "extra_config": ["load-interval 30", "no autostate"]
                         },
                         "Vlan2": {
                             "description": "Test"
@@ -524,6 +532,9 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
                 "result": (
                     "interface Vlan1\n"
                     " description Test\n"
+                    " ip address 192.0.2.1 255.255.255.0\n"
+                    " load-interval 30\n"
+                    " no autostate\n"
                     "!\n"
                     "interface Vlan2\n"
                     " description Test\n"
@@ -532,6 +543,87 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
             }
         ]
         super().common_testbase(test_cases=test_cases)
+
+    def test_shutdown(self):
+        test_cases = [
+            {
+                "test_name": "Test-01",
+                "data": {
+                    "interfaces": {
+                        "Vlan1": InterfaceModel(name="Vlan1", enabled=True),
+                        "Vlan2": InterfaceModel(name="Vlan2", enabled=False)
+                    },
+                    "INTERFACES_DEFAULT_NO_SHUTDOWN": True,
+                    "INCLUDE_DEFAULTS": False
+                },
+                "result": (
+                    "interface Vlan1\n"
+                    "!\n"
+                    "interface Vlan2\n"
+                    " shutdown\n"
+                    "!\n"
+                )
+            },
+            {
+                "test_name": "Test-02",
+                "data": {
+                    "interfaces": {
+                        "Vlan1": InterfaceModel(name="Vlan1", enabled=True),
+                        "Vlan2": InterfaceModel(name="Vlan2", enabled=False)
+                    },
+                    "INTERFACES_DEFAULT_NO_SHUTDOWN": True,
+                    "INCLUDE_DEFAULTS": True
+                },
+                "result": (
+                    "interface Vlan1\n"
+                    " no shutdown\n"
+                    "!\n"
+                    "interface Vlan2\n"
+                    " shutdown\n"
+                    "!\n"
+                )
+            },
+            {
+                "test_name": "Test-03",
+                "data": {
+                    "interfaces": {
+                        "Vlan1": InterfaceModel(name="Vlan1", enabled=True),
+                        "Vlan2": InterfaceModel(name="Vlan2", enabled=False)
+                    },
+                    "INTERFACES_DEFAULT_NO_SHUTDOWN": False,
+                    "INCLUDE_DEFAULTS": False
+                },
+                "result": (
+                    "interface Vlan1\n"
+                    " no shutdown\n"
+                    "!\n"
+                    "interface Vlan2\n"
+                    "!\n"
+                )
+            },
+            {
+                "test_name": "Test-04",
+                "data": {
+                    "interfaces": {
+                        "Vlan1": InterfaceModel(name="Vlan1", enabled=True),
+                        "Vlan2": InterfaceModel(name="Vlan2", enabled=False)
+                    },
+                    "INTERFACES_DEFAULT_NO_SHUTDOWN": False,
+                    "INCLUDE_DEFAULTS": True
+                },
+                "result": (
+                    "interface Vlan1\n"
+                    " no shutdown\n"
+                    "!\n"
+                    "interface Vlan2\n"
+                    " shutdown\n"
+                    "!\n"
+                )
+            }
+
+        ]
+        super().common_testbase(test_cases=test_cases)
+
 
 del BaseTemplateTestIos
 

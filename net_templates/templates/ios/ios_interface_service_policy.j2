@@ -1,10 +1,10 @@
 {# Model: InterfaceServicePolicy #}
 {% from 'ios_common_macros.j2' import stateMacro with context %}
 {% if params | default(none) is not none %}
-{%   if params.input %}
+{%   if params.input | default(none) is not none %}
 {{ ' ' * indent | default(1) }}{{ stateMacro() }}service-policy input {{ params.input }}
 {%   endif %}
-{%   if params.output %}
+{%   if params.output | default(none) is not none %}
 {{ ' ' * indent | default(1) }}{{ stateMacro() }}service-policy output {{ params.output }}
 {%   endif %}
 {% endif %}

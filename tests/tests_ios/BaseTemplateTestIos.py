@@ -1,6 +1,9 @@
 import unittest
 import pathlib
 import yaml
+
+from pydantic.typing import List
+
 from tests import BaseTemplateTest
 from net_models.models.BaseModels import BaseNetModel
 
@@ -12,6 +15,14 @@ class BaseTemplateTestIos(BaseTemplateTest):
     TEMPLATE_NAME = ''
     RESOURCE_DIR = pathlib.Path(__file__).resolve().parent.parent.joinpath("resources").joinpath(VENDOR)
     ENVIRONMENT = BaseTemplateTest.get_vendor_environment(vendor=VENDOR)
+
+    def assert_config_lines_match(self, want: List[str], have: List[str]):
+        want, have = map(lambda x: x.splitlines() if isinstance(x, str) else x, [want, have])
+        self.assertSetEqual(set(want), set(have))
+
+    def render_template(self, data):
+        template = self.ENVIRONMENT.get_template(name=f"{self.TEMPLATE_NAME}.j2")
+        return template.render(**data)
 
     def common_testbase(self, test_cases: list):
 

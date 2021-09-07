@@ -1,11 +1,11 @@
 {% if params %}
-{% if params.send_community %}
+{% if params.send_community | default(none) is not none %}
 {{ ' ' * indent }}neighbor {{ id }} send-community {{ params.send_community }}
 {% endif %}{# params.send_comunity is defined #}
 {% if params.route_reflector_client | default(none) is not none and params.route_reflector_client is sameas true %}
 {{ ' ' * indent }}neighbor {{ id }} route-reflector-client
 {% endif %}{# params.route_reflector_client is defined #}
-{% if params.next_hop_self and params.next_hop_self is sameas true %}
+{% if params.next_hop_self | default(none) is not none and params.next_hop_self is sameas true %}
 {{ ' ' * indent }}neighbor {{ id }} next-hop-self
 {% endif %}{# params.route_reflector_client is defined #}
 {% if params.fall_over | default(none) is not none and params.fall_over is mapping %}

@@ -1,0 +1,12 @@
+{# Model: NetworkClockConfig #}
+{% if params | default(none) is not none %}
+{%   if params.sources | default(none) is not none %}
+{%     for source in params.sources %}
+{%       if source.src_type == 'interface' %}
+network-clock input-source {{ source.priority }} interface {{ source.interface }}
+{%       elif source.src_type == 'external' %}
+network-clock input-source {{ source.priority }} External {{ source.external }} e1 cas
+{%       endif %}
+{%     endfor %}
+{%   endif %}
+{% endif %}

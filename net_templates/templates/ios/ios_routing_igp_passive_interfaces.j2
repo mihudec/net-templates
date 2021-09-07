@@ -1,0 +1,15 @@
+{% if params | default(none) is not none %}
+{%   if params.passive_interface_default | default(none) is sameas true %}
+ passive-interface default
+{%   endif %}
+{%   if params.passive_interfaces | default(none) is not none %}
+{%     for interface_name in params.passive_interfaces %}
+ passive-interface {{ interface_name }}
+{%     endfor %}
+{%   endif %}
+{%   if params.no_passive_interfaces | default(none) is not none %}
+{%     for interface_name in params.no_passive_interfaces %}
+ no passive-interface {{ interface_name }}
+{%     endfor %}
+{%   endif %}
+{% endif %}

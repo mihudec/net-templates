@@ -1,12 +1,12 @@
 {% macro getNeighborId(params, inventory) %}
 {%   set id = 'UNDEFINED' %}
-{%   if params.address %}
+{%   if params.address | default(none) is not none %}
 {%     set id = params.address %}
 {{- id -}}
 {%   else %}
 {%     if params.name %}{# If name, lookup in Global Neighbor #}
 {%       with global_params = bgp_params.neighbors | json_query("[?name == '{}']".format(params.name)) | first %}
-{%         if global_params.address %}
+{%         if global_params.address | default(none) is not none %}
 {%           set id = global_params.address %}
 {{- id -}}
 {%         else %}{# Global Neighbor does not have address #}
@@ -31,7 +31,7 @@ UNDEFINED
 {%   endif %}
 {% endmacro %}
 {% macro getNeighborASN(params) %}
-{%   if params.asn is defined %}
+{%   if params.asn | default(none) is not none %}
 {%     set asn = params.asn %}
 {%   else %}{# params.asn is not defined #}
 {%     set asn = hostvars[params.name].routing.bgp.asn %}

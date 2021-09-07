@@ -1,0 +1,25 @@
+{% if params.enabled | default(none) is not none %}
+{%   if params.enabled is sameas true %}
+{%     if INTERFACES_DEFAULT_NO_SHUTDOWN | default(none) is not none %}
+{%       if INTERFACES_DEFAULT_NO_SHUTDOWN is sameas true %}
+{%         if INCLUDE_DEFAULTS | default(false) is sameas true %}
+ no shutdown
+{%         endif %}
+{%       elif INTERFACES_DEFAULT_NO_SHUTDOWN is sameas false %}
+ no shutdown
+{%       endif %}
+{%     else %}
+{%     endif %}
+{%   elif params.enabled is sameas false %}
+{%     if INTERFACES_DEFAULT_NO_SHUTDOWN | default(none) is not none %}
+{%       if INTERFACES_DEFAULT_NO_SHUTDOWN is sameas true %}
+ shutdown
+{%       elif INTERFACES_DEFAULT_NO_SHUTDOWN is sameas false %}
+{%         if INCLUDE_DEFAULTS | default(false) is sameas true %}
+ shutdown
+{%         endif %}
+{%       endif %}
+{%     else %}
+{%     endif %}
+{%   endif %}
+{% endif %}
