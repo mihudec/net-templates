@@ -1,12 +1,19 @@
 import pathlib
-
+import dataclasses
 import jinja2
+from pydantic import BaseModel
 from pydantic.typing import Literal, Union, Dict, List
 
 from net_templates.definitions import TEMPLATES_DIR
 from net_templates.filters import AnsibleFilters, CustomFilters
 
 supported_device_types = Literal['ios']
+
+
+class ConfigDefaultsBase(BaseModel):
+    INCLUDE_DEFAULTS: bool = None
+    PLATFORM_CDP_DEFAULT_ON: bool = None
+    INTERFACES_DEFAULT_NO_SHUTDOWN: bool = None
 
 
 class TemplarBase:
@@ -21,7 +28,7 @@ class TemplarBase:
             trim_blocks=True,
             lstrip_blocks=True,
             # undefined=jinja2.runtime.ChainableUndefined,
-            undefined=jinja2.runtime.StrictUndefined
+            undefined=jinja2.runtime.StrictUndefined,
         )
 
         ansible_filters = AnsibleFilters().filters()
@@ -53,3 +60,4 @@ class TemplarBase:
 def get_template_dir(device_type: supported_device_types = 'ios'):
     env = TemplarBase.get_device_type_environment(device_type=device_type)
     return pathlib.Path(env.loader.searchpath[0])
+

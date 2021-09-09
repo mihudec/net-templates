@@ -46,7 +46,7 @@ class CustomFilters(BaseFilter):
         try:
             model_data = self.to_model(data=data, model=model, many=many, serialize=False)
         except Exception as e:
-            msg = f"Got Exception while validating data with model 'model'. Exception: {repr(e)}."
+            msg = f"Got Exception while validating data with model '{model}'. Exception: {repr(e)}."
             self.logger.error(msg=msg)
             return False
         if model_data is None:
@@ -119,3 +119,11 @@ class CustomFilters(BaseFilter):
 
     def str_to_obj(self, string: str):
         return eval(string)
+
+    def filters(self):
+        filters = {}
+        for name, method in self.__class__.__dict__.items():
+            if not name.startswith("_") and callable(method):
+                filters[f"mihudec.net_ansible.{name}"] = getattr(self, name)
+        # del filters["filters"]
+        return filters
