@@ -14,7 +14,7 @@ class BaseTemplateTestIos(BaseTemplateTest):
     TEST_CLASS = None
     TEMPLATE_NAME = ''
     RESOURCE_DIR = pathlib.Path(__file__).resolve().parent.parent.joinpath("resources").joinpath(VENDOR)
-    ENVIRONMENT = BaseTemplateTest.get_vendor_environment(vendor=VENDOR)
+    ENVIRONMENT = BaseTemplateTest.get_device_type_environment(device_type=VENDOR)
 
     def assert_config_lines_match(self, want: List[str], have: List[str]):
         want, have = map(lambda x: x.splitlines() if isinstance(x, str) else x, [want, have])
@@ -22,7 +22,7 @@ class BaseTemplateTestIos(BaseTemplateTest):
 
     def render_template(self, data):
         template = self.ENVIRONMENT.get_template(name=f"{self.TEMPLATE_NAME}.j2")
-        return template.render(**data)
+        return self.render_template(**data)
 
     def common_testbase(self, test_cases: list):
 

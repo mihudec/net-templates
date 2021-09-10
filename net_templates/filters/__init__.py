@@ -1,3 +1,1 @@
-from net_templates.filters.BaseFilter import BaseFilter
-from net_templates.filters.CustomFilters import CustomFilters
-from net_templates.filters.AnsibleFilters import AnsibleFilters
+from .NetFilters import NetFilters, namespace_decorator

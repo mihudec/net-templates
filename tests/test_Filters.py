@@ -1,6 +1,7 @@
+import ipaddress
 import unittest
 from net_models.models.BaseModels import BaseNetModel
-from net_templates.filters import CustomFilters, AnsibleFilters
+from net_templates.filters import NetFilters
 from pydantic.error_wrappers import ValidationError
 
 
@@ -8,9 +9,19 @@ class TestTemplateFiltersBase(unittest.TestCase):
 
     pass
 
+
+class TestFiltersDict(TestTemplateFiltersBase):
+
+    TEST_CLASS = NetFilters()
+
+    def test_filters_dict(self):
+        filters = self.TEST_CLASS.filters()
+        print(filters)
+
+
 class TestToVlanRange(TestTemplateFiltersBase):
 
-    TEST_CLASS = CustomFilters()
+    TEST_CLASS = NetFilters()
 
     def test_from_int_list(self):
 
@@ -50,6 +61,8 @@ class TestToVlanRange(TestTemplateFiltersBase):
 
 class TestToModel(TestTemplateFiltersBase):
 
+    TEST_CLASS = NetFilters()
+
     def test_valid_01(self):
         data = {
             "name": "Radius-1",
@@ -60,7 +73,7 @@ class TestToModel(TestTemplateFiltersBase):
             }
         }
         model = "RadiusServer"
-        model_data = CustomFilters().to_model(data=data, model=model, many=False, serialize=False)
+        model_data = self.TEST_CLASS.to_model(data=data, model=model, many=False, serialize=False)
         self.assertIsInstance(model_data, BaseNetModel)
 
     def test_valid_list_01(self):
@@ -83,7 +96,7 @@ class TestToModel(TestTemplateFiltersBase):
             }
         ]
         model = "RadiusServer"
-        model_data = CustomFilters().to_model(data=data, model=model, many=True, serialize=False)
+        model_data = self.TEST_CLASS.to_model(data=data, model=model, many=True, serialize=False)
         if not isinstance(model_data, list):
             self.fail("Model data is not list.")
         elif not all([isinstance(x, BaseNetModel) for x in model_data]):
@@ -99,7 +112,7 @@ class TestToModel(TestTemplateFiltersBase):
             }
         }
         model = "RadiusServer"
-        model_data = CustomFilters().to_model(data=data, model=model, many=False, serialize=True, dict_params={"exclude_none": True})
+        model_data = self.TEST_CLASS.to_model(data=data, model=model, many=False, serialize=True, dict_params={"exclude_none": True})
         self.assertDictEqual(
             model_data,
             {
@@ -120,7 +133,7 @@ class TestToModel(TestTemplateFiltersBase):
         }
         model = "RadiusServer"
         with self.assertRaises(ValidationError):
-            model_data = CustomFilters().to_model(data=data, model=model, many=False, serialize=False)
+            model_data = self.TEST_CLASS.to_model(data=data, model=model, many=False, serialize=False)
 
     def test_invalid_02(self):
         data = {
@@ -129,10 +142,12 @@ class TestToModel(TestTemplateFiltersBase):
         }
         model = "NonExistentModel"
         with self.assertRaises(ValueError):
-            model_data = CustomFilters().to_model(data=data, model=model, many=False, serialize=False)
+            model_data = self.TEST_CLASS.to_model(data=data, model=model, many=False, serialize=False)
 
 
 class TestValidateData(TestTemplateFiltersBase):
+
+    TEST_CLASS = NetFilters()
 
     def test_valid_01(self):
         data = {
@@ -144,7 +159,7 @@ class TestValidateData(TestTemplateFiltersBase):
             }
         }
         model = "RadiusServer"
-        self.assertTrue(CustomFilters().validate_data(data=data, model=model))
+        self.assertTrue(self.TEST_CLASS.validate_data(data=data, model=model))
 
     def test_invalid_02(self):
         data = {
@@ -152,7 +167,60 @@ class TestValidateData(TestTemplateFiltersBase):
             "server": "192.0.2.1"
         }
         model = "RadiusServer"
-        self.assertFalse(CustomFilters().validate_data(data=data, model=model))
+        self.assertFalse(self.TEST_CLASS.validate_data(data=data, model=model))
+
+
+class TestIpAddress(TestTemplateFiltersBase):
+
+    TEST_CLASS = NetFilters()
+    FILTER = TEST_CLASS.ipaddress
+
+    def test_01(self):
+        with self.subTest(msg="Valid Addresses"):
+            for test_value in [
+                "192.168.0.1",
+                "192.168.0.1/24",
+                "192.168.0.1/255.255.255.0",
+                "192.168.0.0/24",
+                "192.168.0.0/255.255.255.0",
+                "0.0.0.0/0.0.0.0"
+            ]:
+                self.assertTrue(self.FILTER(test_value))
+
+        with self.subTest(msg="Invalid Addresses"):
+            for test_value in [
+                "192.168.0.300",
+                "192.168.0.1/33"
+            ]:
+                self.assertTrue(not self.FILTER(test_value))
+
+        with self.subTest(msg="Get Address from IPv4 Interfaces"):
+            for test_value in [
+                "192.168.0.1/32",
+                "192.168.0.1/24"
+            ]:
+                want = test_value.split('/')[0]
+                have = self.FILTER(test_value, 'address')
+                self.assertEqual(want, have)
+        with self.subTest(msg="Get Netmask from IPv4 Interfaces"):
+            for test_value in [
+                "192.168.0.1/32",
+                "192.168.0.1/24"
+            ]:
+                want = str(ipaddress.IPv4Interface(test_value).netmask)
+                have = self.FILTER(test_value, 'netmask')
+                self.assertEqual(want, have)
+
+        with self.subTest(msg="Get Prefix Length from IPv4 Interfaces"):
+            for test_value in [
+                "192.168.0.1/32",
+                "192.168.0.1/24",
+                "192.168.0.0/24"
+            ]:
+                want = str(ipaddress.IPv4Interface(test_value).network.prefixlen)
+                have = self.FILTER(test_value, 'prefixlen')
+                self.assertEqual(want, have)
+
 
 del TestTemplateFiltersBase
 

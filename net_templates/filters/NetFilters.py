@@ -1,10 +1,36 @@
+import json
+import ipaddress
+
+import jmespath
+from pydantic.typing import Callable, Union, Dict, List, Literal
+
+from net_models.utils.get_logger import get_logger
 from net_models.models import models_map
 from net_models.models.BaseModels import BaseNetModel
-from pydantic.typing import Union, Dict, List, Literal
-from net_templates.filters import BaseFilter
 
 
-class CustomFilters(BaseFilter):
+def namespace_decorator(namespace: str):
+    def decorator(function: Callable) -> Callable:
+        def wrapper(*args, **kwargs) -> dict:
+            mapping = function(*args, **kwargs)
+            return {f"{namespace}.{k}": v for k, v in mapping.items()}
+        return wrapper
+    return decorator
+
+
+class NetFilters(object):
+
+    def __init__(self):
+        self.logger = get_logger(name="NetFilters")
+
+    @namespace_decorator(namespace='mihudec.net_filters')
+    def filters(self):
+        filters = {}
+        for name, method in self.__class__.__dict__.items():
+            if not name.startswith("_") and callable(method):
+                filters[name] = getattr(self, name)
+        del filters["filters"]
+        return filters
 
     def to_model(self, data: Union[Dict, List], model: str, many=True, serialize=True, dict_params=None) -> Union[dict, list]:
         model_data = None
@@ -62,8 +88,6 @@ class CustomFilters(BaseFilter):
             msg = f"Unexpected type - 'model_data' is {type(model_data)}. {model_data}"
             raise TypeError(msg)
 
-
-
     def to_vlan_range(self, vlans: Union[List[int], Literal["none", "all"]]) -> str:
 
         if isinstance(vlans, str):
@@ -114,16 +138,48 @@ class CustomFilters(BaseFilter):
             return "none"
         elif vlan_range == "1-4094":
             return "all"
-
         return vlan_range
+
+    def ipaddress(self, ip_address: Union[ipaddress.IPv4Address, ipaddress.IPv4Interface, ipaddress.IPv4Network, ipaddress.IPv6Address, ipaddress.IPv6Interface, ipaddress.IPv6Network], operation: str = None):
+        address = None
+        for func in [ipaddress.ip_address, ipaddress.ip_interface, ipaddress.ip_network]:
+            if address is None:
+                try:
+                    address = func(ip_address)
+                except Exception as e:
+                    pass
+        if operation is None:
+            if address:
+                return True
+            else:
+                return False
+        if operation == "address":
+            if isinstance(address, (ipaddress.IPv4Interface, ipaddress.IPv6Interface)):
+                return str(address.ip)
+            elif isinstance(address, (ipaddress.IPv4Address, ipaddress.IPv6Address)):
+                return str(address)
+        elif operation == "netmask":
+            if isinstance(address, (ipaddress.IPv4Interface, ipaddress.IPv6Interface)):
+                return str(address.with_netmask).split("/")[1]
+        elif operation == 'prefixlen':
+            if isinstance(address, (ipaddress.IPv4Interface, ipaddress.IPv6Interface)):
+                return str(address.network.prefixlen)
+            elif isinstance(address, (ipaddress.IPv4Network, ipaddress.IPv6Network)):
+                return str(address.prefixlen)
+        raise ValueError("Invalid IP Given")
 
     def str_to_obj(self, string: str):
         return eval(string)
 
-    def filters(self):
-        filters = {}
-        for name, method in self.__class__.__dict__.items():
-            if not name.startswith("_") and callable(method):
-                filters[f"mihudec.net_ansible.{name}"] = getattr(self, name)
-        # del filters["filters"]
-        return filters
+    def json_query(self, data: Union[list, dict], query: str):
+        return jmespath.search(query, data)
+
+    def str_to_obj(self, string: str):
+        return eval(string)
+
+    def to_json(self, data: Union[list, dict]) -> str:
+        return json.dumps(data)
+
+    def type_debug(self, var) -> str:
+        return str(type(var))
+

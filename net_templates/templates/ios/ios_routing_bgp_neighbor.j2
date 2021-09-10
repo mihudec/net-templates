@@ -5,13 +5,13 @@
 {{- id -}}
 {%   else %}
 {%     if params.name %}{# If name, lookup in Global Neighbor #}
-{%       with global_params = bgp_params.neighbors | json_query("[?name == '{}']".format(params.name)) | first %}
+{%       with global_params = bgp_params.neighbors | mihudec.net_filters.json_query("[?name == '{}']".format(params.name)) | first %}
 {%         if global_params.address | default(none) is not none %}
 {%           set id = global_params.address %}
 {{- id -}}
 {%         else %}{# Global Neighbor does not have address #}
 {%           if inventory[global_params.name].interfaces[global_params.dest_interface].l3_port.ipv4.addresses[0].address %}
-{%             with id = inventory[global_params.name].interfaces[global_params.dest_interface].l3_port.ipv4.addresses[0].address | ipaddr('address') %}
+{%             with id = inventory[global_params.name].interfaces[global_params.dest_interface].l3_port.ipv4.addresses[0].address | mihudec.net_filters.ipaddress('address') %}
 {{- id -}}
 {%             endwith %}
 {%           else %}
@@ -21,7 +21,7 @@ UNDEFINED
 {%       endwith %}
 {%     else %}{# Lookup based on interface #}
 {%       if inventory[params.name].interfaces[params.dest_interface].l3_port.ipv4.addresses[0].address %}
-{%         with id = inventory[params.name].interfaces[params.dest_interface].l3_port.ipv4.addresses[0].address | ipaddr('address') %}
+{%         with id = inventory[params.name].interfaces[params.dest_interface].l3_port.ipv4.addresses[0].address | mihudec.net_filters.ipaddress('address') %}
 {{- id -}}
 {%         endwith %}
 {%       else %}
@@ -43,7 +43,7 @@ UNDEFINED
 {%   set id = getNeighborId(params, inventory | default({}) ) %}
 {%   if NEIGHBOR_DEFINITION_ALLOWED is sameas true %}
 {%     if params.peer_group | default(none) is not none  %}
-{%       set peer_group = peer_groups | json_query("[?name == '{}']".format(params.peer_group)) | first %}
+{%       set peer_group = peer_groups | mihudec.net_filters.json_query("[?name == '{}']".format(params.peer_group)) | first %}
 {%       if peer_group.asn | default(none) is none %}
 {%         set asn = getNeighborASN(params) %}
 {{ ' ' * indent }}neighbor {{ id }} remote-as {{ asn }}

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from pydantic.typing import Literal, Union, Dict, List
 
 from net_templates.definitions import TEMPLATES_DIR
-from net_templates.filters import AnsibleFilters, CustomFilters
+from net_templates.filters import NetFilters
 
 supported_device_types = Literal['ios']
 
@@ -31,10 +31,8 @@ class TemplarBase:
             undefined=jinja2.runtime.StrictUndefined,
         )
 
-        ansible_filters = AnsibleFilters().filters()
-        custom_filters = CustomFilters().filters()
-        env.filters.update(ansible_filters)
-        env.filters.update(custom_filters)
+        net_filters = NetFilters().filters()
+        env.filters.update(net_filters)
         return env
 
     @classmethod
