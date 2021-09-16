@@ -1,4 +1,4 @@
-net_models>=0.1.9
+net_models>=0.1.10
 pydantic
 jinja2
 pyyaml
