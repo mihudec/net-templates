@@ -9,11 +9,14 @@ from net_models.models import models_map
 from net_models.models.BaseModels import BaseNetModel
 
 
-def namespace_decorator(namespace: str):
+def namespace_decorator(namespace: str = None):
     def decorator(function: Callable) -> Callable:
         def wrapper(*args, **kwargs) -> dict:
             mapping = function(*args, **kwargs)
-            return {f"{namespace}.{k}": v for k, v in mapping.items()}
+            if namespace is not None:
+                return {f"{namespace}.{k}": v for k, v in mapping.items()}
+            else:
+                return mapping
         return wrapper
     return decorator
 
