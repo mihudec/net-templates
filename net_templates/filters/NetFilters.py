@@ -45,7 +45,7 @@ class NetFilters(object):
         if many is False:
             if isinstance(data, dict):
                 if serialize:
-                    if dict_params is not None:
+                    if dict_params is not None or dict_params != "":
                         model_data = model_class.parse_obj(data).serial_dict(**dict_params)
                     else:
                         model_data = model_class.parse_obj(data).serial_dict()
