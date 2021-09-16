@@ -8,6 +8,7 @@ router bgp 64496
  neighbor iBGP-RR update-source Loopback0
  neighbor iBGP-RR password 0 SuperSecret
  neighbor iBGP-RR ha-mode sso
+ neighbor iBGP-RR timers 10 30
  !
  neighbor 192.0.2.2 peer-group iBGP-RR
  neighbor 192.0.2.2 description ROUTER-B

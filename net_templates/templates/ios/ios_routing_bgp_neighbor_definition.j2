@@ -17,6 +17,10 @@
 {%   if params.ha_mode | default(none) is not none %}
 {{ ' ' * indent }}neighbor {{ id }} ha-mode {{ params.ha_mode }}
 {%   endif %}{# if params.password is defined #}
+{# Neighbor Timers #}
+{% if params.timers | default(none) is not none %}
+{{ ' ' * indent }}neighbor {{ id }} timers {{ params.timers.hello }} {{ params.timers.hold }}
+{% endif %}
 {# Neighbor Version #}
 {%   if params.version | default(none) is not none %}
 {{ ' ' * indent }}neighbor {{ id }} version {{ params.version }}

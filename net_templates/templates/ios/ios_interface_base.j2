@@ -7,6 +7,7 @@ interface {{ name }}
 {% if params.description | default(none) is not none %}
  description {{ params.description }}
 {% endif %}
+{% include 'ios_interface_shutdown.j2' %}
 {% if params.discovery_protocols | default(none) is not none %}
 {%   if params.discovery_protocols.cdp | default(none) is not none %}
 {%     with params = params.discovery_protocols.cdp %}
@@ -37,7 +38,6 @@ interface {{ name }}
 {%     include 'ios_interface_service_instance.j2' %}
 {%   endfor %}
 {% endif %}
-{% include 'ios_interface_shutdown.j2' %}
 {% if params.extra_config | default(none) is not none %}
 {%   with extra_config = params.extra_config, indent = 1 %}
 {%   include 'ios_common_extra_config.j2' %}

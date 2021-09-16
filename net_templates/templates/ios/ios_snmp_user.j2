@@ -1,0 +1,4 @@
+{# Model: SnmpUser #}
+{% if params | default(none) is not none %}
+snmp-server user {{ params.name }} {{ params.group }} {{ params.version }} auth {{ params.auth.method }} {{ params.auth.value }} priv {{ params.priv.method }} {% if params.priv.method == 'aes' %}{{ params.priv.key_length }} {% endif %}{{ params.priv.value }}{% if params.access_list | default(none) is not none %} access {{ params.access_list }}{% endif +%}
+{% endif %}

@@ -1,0 +1,4 @@
+{# Model: SnmpGroup #}
+{% if params | default(none) is not none %}
+snmp-server group {{ params.name }} {{ params.version }}{% if params.version == 'v3' %} {{ params.level }}{% endif %}{% if params.read | default(none) is not none %} read {{ params.read }}{% endif %}{% if params.write | default(none) is not none %} write {{ params.write }}{% endif %}{% if params.notify | default(none) is not none %} notify {{ params.notify }}{% endif %}{% if params.access_list | default(none) is not none %} access {{ params.access_list }}{% endif +%}
+{% endif %}

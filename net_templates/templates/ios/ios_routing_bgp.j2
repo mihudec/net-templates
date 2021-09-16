@@ -1,3 +1,4 @@
+{# Model: RoutingBgpProcess #}
 {% if bgp_params %}
 router bgp {{ bgp_params.asn }}
 {%   if bgp_params.router_id | default(none) is not none %}
@@ -19,16 +20,16 @@ router bgp {{ bgp_params.asn }}
 {%       include 'ios_routing_bgp_peer_group.j2' %}
 {%     endwith %}
 {%   endfor %}
-{% endif %}
  !
+{% endif %}
 {%   if bgp_params.neighbors | default(none) is not none  %}
 {%     for params in bgp_params.neighbors %}
 {%       with indent=1, peer_groups = bgp_params.peer_groups | default([]), NEIGHBOR_DEFINITION_ALLOWED = true %}
 {%         include 'ios_routing_bgp_neighbor.j2' %}
 {%       endwith %}
 {%     endfor %}
-{% endif %}
  !
+{% endif %}
 {%   if bgp_params.address_families | default(none) is not none  %}
 {%     for af in bgp_params.address_families %}
 {%       with params = af %}

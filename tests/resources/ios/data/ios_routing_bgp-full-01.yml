@@ -12,6 +12,9 @@ bgp_params:
       key:
         encryption_type: 0
         value: SuperSecret
+      timers:
+        hello: 10
+        hold: 30
   neighbors:
     - name: ROUTER-B
       peer_group: iBGP-RR

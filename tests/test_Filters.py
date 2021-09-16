@@ -28,7 +28,7 @@ class TestToVlanRange(TestTemplateFiltersBase):
         test_cases = [
             {
                 "test_name": "Test-From-Int-01",
-                "data": list(range(1,4)),
+                "data": list(range(1, 4)),
                 "result": "1-3"
             },
             {
