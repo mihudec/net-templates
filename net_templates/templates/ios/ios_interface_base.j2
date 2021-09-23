@@ -28,6 +28,11 @@ interface {{ name }}
 {%     include 'ios_interface_l3_port.j2' %}
 {%   endwith %}
 {% endif %}
+{% if params.lag_member | default(none) is not none %}
+{%   with params = params.lag_member %}
+{%     include 'ios_interface_lag_member.j2' %}
+{%   endwith %}
+{% endif %}
 {% if params.service_policy | default(none) is not none %}
 {%   with params = params.service_policy %}
 {%     include 'ios_interface_service_policy.j2' %}

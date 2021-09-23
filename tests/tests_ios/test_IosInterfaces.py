@@ -6,7 +6,8 @@ from net_models.models.interfaces import (
     InterfaceBfdConfig,
     InterfaceModel,
     InterfaceSwitchportModel,
-    InterfaceServicePolicy
+    InterfaceServicePolicy,
+    InterfaceLagMemberConfig
 )
 from net_models.models.interfaces.L3InterfaceModels import (
     InterfaceRouteportModel,
@@ -503,6 +504,41 @@ class TestIosInterfaceServiceInstance(BaseTemplateTestIos):
         self.common_testbase(test_cases=test_cases)
 
 
+class TestIosInterfaceLag(BaseTemplateTestIos):
+
+    TEMPLATE_NAME = 'ios_interface_lag_member'
+
+    def test_01(self):
+        test_cases = [
+            {
+                "test_name": "Test-LACP-Active",
+                "data": {
+                    "params": InterfaceLagMemberConfig(
+                        group=1,
+                        mode='active'
+                    )
+                },
+                "result": (
+                    " channel-group 1 mode active\n"
+                )
+            },
+            {
+                "test_name": "Test-LACP-Passive",
+                "data": {
+                    "params": InterfaceLagMemberConfig(
+                        group=1,
+                        mode='passive'
+                    )
+                },
+                "result": (
+                    " channel-group 1 mode passive\n"
+                )
+            }
+        ]
+        super().common_testbase(test_cases=test_cases)
+
+
+
 class TestIosInterfaceAll(BaseTemplateTestIos):
 
     TEMPLATE_NAME = "ios_interfaces"
@@ -624,6 +660,33 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
         ]
         super().common_testbase(test_cases=test_cases)
 
+    def test_lag(self):
+        test_cases = [
+            {
+                "test_name": "Test-LAG-Member",
+                "data": {
+                    "interfaces": {
+                        "TenGigabitEthernet1/0/1": InterfaceModel(
+                            name="TenGigabitEthernet1/0/1",
+                            description="Test",
+                            lag_member=InterfaceLagMemberConfig(
+                                group=1,
+                                mode='active',
+                                protocol='lacp'
+                            )
+                        )
+                    }
+                },
+                "result": (
+                    "interface TenGigabitEthernet1/0/1\n"
+                    " description Test\n"
+                    " channel-protocol lacp\n"
+                    " channel-group 1 mode active\n"
+                    "!\n"
+                )
+            }
+        ]
+        super().common_testbase(test_cases=test_cases)
 
 del BaseTemplateTestIos
 

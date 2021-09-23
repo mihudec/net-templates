@@ -1,0 +1,7 @@
+{# Model: InterfaceLagMemberConfig #}
+{% if params | default(none) is not none %}
+{%   if params.protocol | default(none) is not none %}
+ channel-protocol {{ params.protocol }}
+{%   endif %}
+ channel-group {{ params.group }} mode {{ params.mode }}
+{% endif %}
