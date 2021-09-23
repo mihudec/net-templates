@@ -42,10 +42,16 @@ class NetFilters(object):
             msg = f"Unknown model: '{model}'. Current models are: '{models_map}'."
             self.logger.error(msg=msg)
             raise ValueError(msg)
+        # dict_params must be a dict or none
+        if dict_params is not None:
+            if not isinstance(dict_params, dict):
+                msg = f"Got unexpected type for 'dict_params'. Expected Union[dict, None], got {type(dict_params)} ({dict_params}) instead."
+                self.logger.error(msg=msg)
+                dict_params = None
         if many is False:
             if isinstance(data, dict):
                 if serialize:
-                    if dict_params is not None or dict_params != "":
+                    if dict_params is not None:
                         model_data = model_class.parse_obj(data).serial_dict(**dict_params)
                     else:
                         model_data = model_class.parse_obj(data).serial_dict()
