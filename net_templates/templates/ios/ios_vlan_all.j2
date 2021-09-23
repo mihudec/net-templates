@@ -1,0 +1,8 @@
+{% if params | default(none) is not none %}
+{# Loop over VLANs #}
+{%   for item in params %}
+{%     with params = item %}
+{%       include 'ios_vlan.j2' %}
+{%     endwith %}
+{%   endfor %}
+{% endif %}

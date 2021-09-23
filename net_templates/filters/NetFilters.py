@@ -177,6 +177,15 @@ class NetFilters(object):
                 return str(address.prefixlen)
         raise ValueError("Invalid IP Given")
 
+    def get_vlans(self, vlan_definitions: list, host_name: str, vlan_ids: List[int] = None) -> List[Dict]:
+        if isinstance(vlan_definitions, list):
+            vlan_definitions_w_hosts = [x for x in vlan_definitions if 'hosts' in x.keys()]
+            vlans = [x for x in vlan_definitions_w_hosts if host_name in x['hosts']]
+            return vlans
+        else:
+            return []
+            
+
     def str_to_obj(self, string: str):
         return eval(string)
 

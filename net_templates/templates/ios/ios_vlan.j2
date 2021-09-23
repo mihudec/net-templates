@@ -1,0 +1,6 @@
+{% if params | default(none) is not none %}
+vlan {{ params.vlan_id }}
+{%   if params.name | default(none) is not none %}
+ name {{ params.name }}
+{%   endif %}
+{% endif %}
