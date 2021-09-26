@@ -222,6 +222,105 @@ class TestIpAddress(TestTemplateFiltersBase):
                 self.assertEqual(want, have)
 
 
+class TestGetVlans(TestTemplateFiltersBase):
+
+    TEST_CLASS = NetFilters()
+    FILTER = TEST_CLASS.get_vlans
+
+    def test_get_vlans(self):
+        vlan_definitions = [
+            {
+                "vlan_id": 10,
+                "name": "Vlan10",
+                "hosts": [
+                    {
+                        "name": "SW-01"
+                    },
+                    {
+                        "name": "SW-02"
+                    }
+                ]
+            },
+            {
+                "vlan_id": 11,
+                "name": "Vlan11",
+                "hosts": [
+                    {
+                        "name": "SW-01"
+                    }
+                ]
+            },
+            {
+                "vlan_id": 12,
+                "name": "Vlan12",
+                "hosts": [
+                    {
+                        "name": "SW-02"
+                    }
+                ]
+            },
+            {
+                "vlan_id": 20,
+                "name": "Vlan20"
+            },
+
+        ]
+        with self.subTest(msg="SW-01"):
+            want = [
+                {
+                    "vlan_id": 10,
+                    "name": "Vlan10",
+                    "hosts": [
+                        {
+                            "name": "SW-01"
+                        },
+                        {
+                            "name": "SW-02"
+                        }
+                    ]
+                },
+                {
+                    "vlan_id": 11,
+                    "name": "Vlan11",
+                    "hosts": [
+                        {
+                            "name": "SW-01"
+                        }
+                    ]
+                }
+            ]
+            have = self.FILTER(vlan_definitions=vlan_definitions, host_name="SW-01")
+            print(have)
+            self.assertEqual(want, have)
+        with self.subTest(msg="SW-02"):
+            want = [
+                {
+                    "vlan_id": 10,
+                    "name": "Vlan10",
+                    "hosts": [
+                        {
+                            "name": "SW-01"
+                        },
+                        {
+                            "name": "SW-02"
+                        }
+                    ]
+                },
+                {
+                    "vlan_id": 12,
+                    "name": "Vlan12",
+                    "hosts": [
+                        {
+                            "name": "SW-02"
+                        }
+                    ]
+                }
+            ]
+            have = self.FILTER(vlan_definitions=vlan_definitions, host_name="SW-02")
+            print(have)
+            self.assertEqual(want, have)
+
+
 del TestTemplateFiltersBase
 
 if __name__ == '__main__':

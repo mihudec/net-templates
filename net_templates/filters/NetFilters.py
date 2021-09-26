@@ -7,6 +7,7 @@ from pydantic.typing import Callable, Union, Dict, List, Literal
 from net_models.utils.get_logger import get_logger
 from net_models.models import models_map
 from net_models.models.BaseModels import BaseNetModel
+from net_models.inventory.Config import VLANHostMapping
 
 
 def namespace_decorator(namespace: str = None):
@@ -178,10 +179,17 @@ class NetFilters(object):
         raise ValueError("Invalid IP Given")
 
     def get_vlans(self, vlan_definitions: list, host_name: str, vlan_ids: List[int] = None) -> List[Dict]:
+        host_vlans = []
         if isinstance(vlan_definitions, list):
-            vlan_definitions_w_hosts = [x for x in vlan_definitions if 'hosts' in x.keys()]
-            vlans = [x for x in vlan_definitions_w_hosts if host_name in x['hosts']]
-            return vlans
+            vlan_definitions = map(VLANHostMapping.parse_obj, vlan_definitions)
+
+            vlan_definitions_w_hosts = [x for x in vlan_definitions if x.hosts is not None]
+            for vlan_definition in vlan_definitions_w_hosts:
+                for host in vlan_definition.hosts:
+                    if host.name == host_name:
+                        self.logger.debug(msg=f"Host {host_name} is member of VLAN {vlan_definition.vlan_id}")
+                        host_vlans.append(vlan_definition)
+            return [x.serial_dict(exclude_none=True) for x in host_vlans]
         else:
             return []
             
