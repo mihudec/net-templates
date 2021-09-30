@@ -12,7 +12,8 @@ from net_models.models.interfaces import (
 from net_models.models.interfaces.L3InterfaceModels import (
     InterfaceRouteportModel,
     InterfaceIsisConfig, IsisMetricField, IsisInterfaceAuthentication,
-    InterfaceOspfConfig, InterfaceOspfAuthentication, KeyOspf, InterfaceOspfTimers
+    InterfaceOspfConfig, InterfaceOspfAuthentication, KeyOspf, InterfaceOspfTimers,
+    InterfaceHsrp
 )
 
 
@@ -451,6 +452,16 @@ class TestIosInterfaceOspf(BaseTemplateTestIos):
             }
         ]
         super().common_testbase(test_cases=test_cases)
+
+
+class TestIosInterfaceHsrp(BaseTemplateTestIos):
+
+    TEMPLATE_NAME = 'ios_interface_hsrp'
+    TEST_CLASS = InterfaceHsrp
+
+    def test_resources(self):
+        self.common_testbase(test_cases=self.get_test_cases_from_resources())
+
 
 
 class TestIosInterfaceL3(BaseTemplateTestIos):

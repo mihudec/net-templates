@@ -1,0 +1,13 @@
+{# Model: InterfaceHsrp #}
+{% if params | default(none) is not none %}
+{%   if params.version | default(none) is not none %}
+ standby version {{ params.version }}
+{%   endif %}
+{%   if params.groups | default(none) is not none %}
+{%     for group in  params.groups %}
+{%       with params = group %}
+{%         include 'ios_interface_hsrp_group.j2' %}
+{%       endwith %}
+{%     endfor %}
+{%   endif %}
+{% endif %}

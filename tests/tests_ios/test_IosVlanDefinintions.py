@@ -5,7 +5,7 @@ from net_models.models.BaseModels.SharedModels import VLANModel
 from tests.tests_ios.BaseTemplateTestIos import BaseTemplateTestIos
 
 
-class TestIosVrfDefinition(BaseTemplateTestIos):
+class TestIosVlanDefinition(BaseTemplateTestIos):
 
     TEMPLATE_NAME = 'ios_vlan'
     TEST_CLASS = VLANModel
@@ -23,12 +23,13 @@ class TestIosVrfDefinition(BaseTemplateTestIos):
                 "result": (
                     "vlan 10\n"
                     " name Vlan-10\n"
+                    "!\n"
                 )
             }
         ]
         super().common_testbase(test_cases=test_cases)
 
-class TestIosVLanDefinitions(BaseTemplateTestIos):
+class TestIosVlanDefinitions(BaseTemplateTestIos):
 
     TEMPLATE_NAME = 'ios_vlan_all'
 
@@ -45,8 +46,10 @@ class TestIosVLanDefinitions(BaseTemplateTestIos):
                 "result": (
                     "vlan 10\n"
                     " name Vlan-10\n"
+                    "!\n"
                     "vlan 20\n"
                     " name Vlan-20\n"
+                    "!\n"
                 )
             }
         ]

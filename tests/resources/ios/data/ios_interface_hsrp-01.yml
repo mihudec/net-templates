@@ -1,0 +1,24 @@
+params:
+  version: 2
+  groups:
+    - group_id: 10
+      ipv4:
+        - address: 10.0.10.1
+        - address: 192.168.10.1
+          secondary: true
+      priority: 110
+      preemption: true
+      timers:
+        hello: 100
+        hold: 300
+        milliseconds: true
+      authentication:
+        method: key-chain
+        keychain: KC-HSRP
+      tracks:
+        - track_id: 1
+          action: decrement
+          decrement_value: 20
+        - track_id: 100
+          action: shutdown
+      follow: 100

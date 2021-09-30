@@ -38,4 +38,8 @@
 {%       include 'ios_interface_bfd.j2' %}
 {%     endwith %}
 {%   endif %}
+{# HSRP Section #}
+{%   if params.hsrp | default(none) is not none %}
+{% include 'ios_interface_hsrp.j2' %}
+{%   endif %}
 {% endif %}

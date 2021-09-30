@@ -1,0 +1,46 @@
+{# Model: InterfaceHsrpGroup #}
+{% if params | default(none) is not none %}
+{%   if params.ipv4 | default(none) is not none %}
+{%     for ipv4 in params.ipv4 %}
+ standby {{ params.group_id }} ip {{ ipv4.address }}{% if ipv4.secondary is defined and ipv4.secondary is sameas true %} secondary{% endif +%}
+{%     endfor %}
+{%   endif %}
+{%   if params.priority | default(none) is not none %}
+{%     if params.priority == 100 %}
+{%       if INCLUDE_DEFAULTS | default(false) is sameas true %}
+ standby {{ params.group_id }} priority {{ params.priority }}
+{%       endif %}
+{%     else %}
+ standby {{ params.group_id }} priority {{ params.priority }}
+{%     endif %}
+{%   endif %}
+{%   if params.preemption | default(none) is not none %}
+ standby {{ params.group_id }} preempt
+{%   endif %}
+{%   if params.timers | default(none) is not none %}
+ standby {{ params.group_id }} timers{% if params.timers.milliseconds | default(none) is sameas true %} msec{% endif %} {{ params.timers.hello }} {{ params.timers.hold }}
+{%   endif %}
+{# Authentication Section #}
+{%   if params.authentication | default(none) is not none %}
+{%     if params.authentication.method == "text" %}
+ standby {{ params.group_id }} authentication text {{ params.authentication.key.string }}
+{%     elif params.authentication.method == "md5" %}
+ standby {{ params.group_id }} authentication md5 key-string {% if params.authentication.key.encryption_type | default(none) is not none %}{{ params.authentication.key.encryption_type }} {% endif %}{{ params.authentication.key.value }}
+{%     elif params.authentication.method == "key-chain" and params.authentication.keychain | default(none) is not none %}
+ standby {{ params.group_id }} authentication md5 key-chain {{ params.authentication.keychain }}
+{%     else %}
+{%     endif %}
+{%   endif %}
+{%   if params.follow | default(none) is not none %}
+ standby {{ params.group_id }} follow {{ params.follow }}
+{%   endif %}
+{%   if params.tracks | default(none) is not none %}
+{%     for track in params.tracks %}
+{%       if track.action == "shutdown" %}
+ standby {{ params.group_id }} track {{ track.track_id }} shutdown
+{%       elif track.action == "decrement" %}
+ standby {{ params.group_id }} track {{ track.track_id }} decrement {{ track.decrement_value }}
+{%       endif %}
+{%     endfor %}
+{%   endif %}
+{% endif %}
