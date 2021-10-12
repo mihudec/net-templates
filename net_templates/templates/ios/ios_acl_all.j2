@@ -1,0 +1,12 @@
+{% if params | default(none) is not none %}
+{%   for acl in params %}
+{% with params = acl %}
+{%     if acl.acl_type == "standard" %}
+{%       include 'ios_acl_standard.j2' %}
+{%     elif acl.acl_type == "extended" %}
+{%       include 'ios_acl_extended.j2' %}
+{%     endif %}
+!
+{% endwith %}
+{%   endfor %}
+{% endif %}

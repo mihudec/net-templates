@@ -1,5 +1,8 @@
 {# Model: InterfaceHsrpGroup #}
 {% if params | default(none) is not none %}
+{%   if params.name | default(none) is not none %}
+ standby {{ params.group_id }} name {{ params.name }}
+{%   endif %}
 {%   if params.ipv4 | default(none) is not none %}
 {%     for ipv4 in params.ipv4 %}
  standby {{ params.group_id }} ip {{ ipv4.address }}{% if ipv4.secondary is defined and ipv4.secondary is sameas true %} secondary{% endif +%}
@@ -23,7 +26,7 @@
 {# Authentication Section #}
 {%   if params.authentication | default(none) is not none %}
 {%     if params.authentication.method == "text" %}
- standby {{ params.group_id }} authentication text {{ params.authentication.key.string }}
+ standby {{ params.group_id }} authentication {{ params.authentication.key.string }}
 {%     elif params.authentication.method == "md5" %}
  standby {{ params.group_id }} authentication md5 key-string {% if params.authentication.key.encryption_type | default(none) is not none %}{{ params.authentication.key.encryption_type }} {% endif %}{{ params.authentication.key.value }}
 {%     elif params.authentication.method == "key-chain" and params.authentication.keychain | default(none) is not none %}

@@ -1,0 +1,45 @@
+{% macro getAddress(address, mask) %}
+{% if address == 'any' %}
+any
+{% else %}
+{%   if mask is not none %}
+{%     set address = address.split("/")[0] %}
+{%   elif '/' in address %}{# mask is null #}
+{%     set mask = address | mihudec.net_filters.ipaddress('netmask') | mihudec.net_filters.to_wildcard %}
+{%     set address = address.split("/")[0] %}
+{%   else %}{# mask not specified, treat as hostmask #}
+{%     set mask = "0.0.0.0" %}
+{%     set address = address | ipaddr('address') %}
+{%   endif %}{# mask is not null #}
+{%   if mask == "0.0.0.0" %}
+{{ address }}
+{%   else %}{# mask is not hostmask #}
+{{ address }} {{ mask }}
+{%   endif %}{# mask is hostmask #}
+{% endif %}{# src_address is 'any' #}
+{% endmacro %}
+{% macro SequenceNumber(seq_no) %}
+{%   if seq_no is not none %}
+{% set seq_no = seq_no | string + ' ' %}
+{{- seq_no -}}
+{%   endif %}
+{% endmacro %}
+{% if params | default(none) is not none %}
+ip access-list standard {{ params.name }}
+{%   for entry in params.entries %}
+{%     if not(entry.seq_no is defined) or not(entry.seq_no is number) %}
+{%       set seq_no = loop.index * 10 %}
+{%     else %}
+{%       set seq_no = entry.seq_no %}
+{%     endif %}
+{%     if entry.remark is defined and entry.remark is string %}
+ {{ SequenceNumber(entry.seq_no | default(none)) }}remark {{ entry.remark }}
+{%     endif %}{# remark is defined #}
+{%     if entry.action == "permit" %}
+{%       set action = "permit" %}
+{%     elif entry.action == "deny" %}
+{%       set action = "deny  " %}
+{%     endif %}
+ {{ SequenceNumber(entry.seq_no | default(none)) }}{{ action }} {{ getAddress(address=entry.src_address, mask=entry.src_mask | default(none)) -}}
+{%   endfor %}{# for entry in acl.entries #}
+{% endif %}

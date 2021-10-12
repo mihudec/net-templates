@@ -1,0 +1,9 @@
+{% if params | default(none) is not none %}
+{%   if params.acl_type == "standard" %}
+{%     if params.acl_version | default("ipv4") == "ipv4" %}
+{%       include 'ios_acl_standard_ipv4.j2' %}
+{%     elif params.acl_version == "ipv6" %}
+{%       include 'ios_acl_standard_ipv6.j2' %}
+{%     endif %}
+{%   endif %}
+{% endif %}

@@ -192,7 +192,11 @@ class NetFilters(object):
             return [x.serial_dict(exclude_none=True) for x in host_vlans]
         else:
             return []
-            
+
+    def to_wildcard(self, mask):
+        parts = mask.split(".")
+        wildcard_parts = [str(255-int(x)) for x in parts]
+        return ".".join(wildcard_parts)
 
     def str_to_obj(self, string: str):
         return eval(string)
