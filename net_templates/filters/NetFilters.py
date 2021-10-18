@@ -1,6 +1,6 @@
 import json
 import ipaddress
-
+from copy import deepcopy
 import jmespath
 from pydantic.typing import Callable, Union, Dict, List, Literal
 
@@ -18,7 +18,9 @@ def namespace_decorator(namespace: str = None):
                 return {f"{namespace}.{k}": v for k, v in mapping.items()}
             else:
                 return mapping
+
         return wrapper
+
     return decorator
 
 
@@ -36,7 +38,11 @@ class NetFilters(object):
         del filters["filters"]
         return filters
 
-    def to_model(self, data: Union[Dict, List], model: str, many=True, serialize=True, dict_params=None) -> Union[dict, list]:
+    def to_model(self, data: Union[Dict, List], model: str, many: bool = True, serialize: bool = True,
+                 dict_params: dict = None) -> Union[dict, list]:
+        if dict_params is not None:
+            dict_params = self._parse_pydantic_filter(data=dict_params)
+        print(dict_params)
         model_data = None
         model_class: BaseNetModel = models_map.get(model)
         if model_class is None:
@@ -77,6 +83,24 @@ class NetFilters(object):
                 self.logger.error(msg=msg)
                 raise TypeError(msg)
         return model_data
+
+    def _parse_pydantic_filter(self, data: Union[dict, list]):
+        """
+
+        """
+        data = deepcopy(data)
+        if isinstance(data, list):
+            return set(data)
+        elif isinstance(data, dict):
+            for k, v in data.items():
+                if isinstance(v, str):
+                    if v == '...':
+                        data[k] = ...
+                elif isinstance(v, dict):
+                    data[k] = self._parse_pydantic_filter(data=v)
+                elif isinstance(v, list):
+                    data[k] = set(v)
+        return data
 
     def validate_data(self, data: Union[dict, list], model: str, many=False) -> bool:
         try:
@@ -150,7 +174,10 @@ class NetFilters(object):
             return "all"
         return vlan_range
 
-    def ipaddress(self, ip_address: Union[ipaddress.IPv4Address, ipaddress.IPv4Interface, ipaddress.IPv4Network, ipaddress.IPv6Address, ipaddress.IPv6Interface, ipaddress.IPv6Network], operation: str = None):
+    def ipaddress(self, ip_address: Union[
+        ipaddress.IPv4Address, ipaddress.IPv4Interface, ipaddress.IPv4Network, ipaddress.IPv6Address,
+        ipaddress.IPv6Interface, ipaddress.IPv6Network],
+                  operation: str = None):
         address = None
         for func in [ipaddress.ip_address, ipaddress.ip_interface, ipaddress.ip_network]:
             if address is None:
@@ -195,7 +222,7 @@ class NetFilters(object):
 
     def to_wildcard(self, mask):
         parts = mask.split(".")
-        wildcard_parts = [str(255-int(x)) for x in parts]
+        wildcard_parts = [str(255 - int(x)) for x in parts]
         return ".".join(wildcard_parts)
 
     def str_to_obj(self, string: str):
@@ -212,4 +239,3 @@ class NetFilters(object):
 
     def type_debug(self, var) -> str:
         return str(type(var))
-

@@ -1,6 +1,7 @@
 import ipaddress
 import unittest
 from net_models.models.BaseModels import BaseNetModel
+from net_models.models.interfaces import InterfaceModel
 from net_templates.filters import NetFilters
 from pydantic.error_wrappers import ValidationError
 
@@ -319,6 +320,49 @@ class TestGetVlans(TestTemplateFiltersBase):
             have = self.FILTER(vlan_definitions=vlan_definitions, host_name="SW-02")
             print(have)
             self.assertEqual(want, have)
+
+
+class TestParsePydanticFilter(TestTemplateFiltersBase):
+
+    TEST_CLASS = NetFilters()
+    FILTER = TEST_CLASS._parse_pydantic_filter
+
+    def test_01(self):
+        interface_data = [
+            {
+                "name": "Te1/0/1",
+                "description": "Test Description",
+                "l3_port": {
+                    "ipv4": {
+                        "addresses": [
+                            {
+                                "address": "192.0.2.1/30"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "Te1/0/2",
+                "description": "Test Description",
+                "l3_port": {
+                    "ipv4": {
+                        "addresses": [
+                            {
+                                "address": "192.0.2.5/30"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+        data = {"include": {"name": '...', "description": '...', "enabled": '...', "l3_port": {"ipv4": ['addresses']}}}
+        print(data)
+        have = self.FILTER(data=data)
+        want = {"include": {'name': Ellipsis, 'description': Ellipsis, 'enabled': Ellipsis, 'l3_port': {'ipv4': {'addresses'}}}}
+        # data = None
+        print(self.TEST_CLASS.to_model(data=interface_data, many=True, model='InterfaceModel', dict_params=data))
+        self.assertEqual(want, have)
 
 
 del TestTemplateFiltersBase
