@@ -559,7 +559,7 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
             {
                 "test_name": "Test-01",
                 "data": {
-                    "interfaces": {
+                    "params": {
                         "Vlan1": {
                             "description": "Test",
                             "l3_port": {
@@ -596,7 +596,7 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
             {
                 "test_name": "Test-01",
                 "data": {
-                    "interfaces": {
+                    "params": {
                         "Vlan1": InterfaceModel(name="Vlan1", enabled=True),
                         "Vlan2": InterfaceModel(name="Vlan2", enabled=False)
                     },
@@ -614,7 +614,7 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
             {
                 "test_name": "Test-02",
                 "data": {
-                    "interfaces": {
+                    "params": {
                         "Vlan1": InterfaceModel(name="Vlan1", enabled=True),
                         "Vlan2": InterfaceModel(name="Vlan2", enabled=False)
                     },
@@ -633,7 +633,7 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
             {
                 "test_name": "Test-03",
                 "data": {
-                    "interfaces": {
+                    "params": {
                         "Vlan1": InterfaceModel(name="Vlan1", enabled=True),
                         "Vlan2": InterfaceModel(name="Vlan2", enabled=False)
                     },
@@ -651,7 +651,7 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
             {
                 "test_name": "Test-04",
                 "data": {
-                    "interfaces": {
+                    "params": {
                         "Vlan1": InterfaceModel(name="Vlan1", enabled=True),
                         "Vlan2": InterfaceModel(name="Vlan2", enabled=False)
                     },
@@ -676,7 +676,7 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
             {
                 "test_name": "Test-LAG-Member",
                 "data": {
-                    "interfaces": {
+                    "params": {
                         "TenGigabitEthernet1/0/1": InterfaceModel(
                             name="TenGigabitEthernet1/0/1",
                             description="Test",

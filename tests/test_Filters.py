@@ -356,10 +356,16 @@ class TestParsePydanticFilter(TestTemplateFiltersBase):
                 }
             }
         ]
-        data = {"include": {"name": '...', "description": '...', "enabled": '...', "l3_port": {"ipv4": ['addresses']}}}
+        data = {
+            "include": {"name": '...', "description": '...', "enabled": '...', "l3_port": {"ipv4": ['addresses']}},
+            "exclude_none": True
+        }
         print(data)
         have = self.FILTER(data=data)
-        want = {"include": {'name': Ellipsis, 'description': Ellipsis, 'enabled': Ellipsis, 'l3_port': {'ipv4': {'addresses'}}}}
+        want = {
+            "include": {'name': Ellipsis, 'description': Ellipsis, 'enabled': Ellipsis, 'l3_port': {'ipv4': {'addresses'}}},
+            "exclude_none": True
+        }
         # data = None
         print(self.TEST_CLASS.to_model(data=interface_data, many=True, model='InterfaceModel', dict_params=data))
         self.assertEqual(want, have)

@@ -42,7 +42,6 @@ class NetFilters(object):
                  dict_params: dict = None) -> Union[dict, list]:
         if dict_params is not None:
             dict_params = self._parse_pydantic_filter(data=dict_params)
-        print(dict_params)
         model_data = None
         model_class: BaseNetModel = models_map.get(model)
         if model_class is None:
