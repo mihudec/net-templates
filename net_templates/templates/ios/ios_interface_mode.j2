@@ -1,0 +1,23 @@
+{% if params | default(none) is not none %}
+{%   if INTERFACE_DEFAULT_MODE | default(none) is not none and params.tags | default(none) is not none %}
+{%     if 'virtual' not in params.tags %}
+{%       if INTERFACE_DEFAULT_MODE == 'switched' %}
+{%         if 'l2' in params.tags %}
+{%           if INCLUDE_DEFAULTS | default(false) is sameas true %}
+ switchport
+{%           endif %}
+{%         elif 'l3' in params.tags %}
+ no switchport
+{%         endif %}
+{%       elif INTERFACE_DEFAULT_MODE == 'routed' %}
+{%         if 'l2' in params.tags %}
+ switchport
+{%         elif 'l3' in params.tags %}
+{%           if INCLUDE_DEFAULTS | default(false) is sameas true %}
+ no switchport
+{%           endif %}
+{%         endif %}
+{%       endif %}
+{%     endif %}
+{%   endif %}
+{% endif %}

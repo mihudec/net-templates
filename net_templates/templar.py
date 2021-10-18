@@ -14,6 +14,7 @@ class ConfigDefaultsBase(BaseModel):
     INCLUDE_DEFAULTS: bool = None
     PLATFORM_CDP_DEFAULT_ON: bool = None
     INTERFACES_DEFAULT_NO_SHUTDOWN: bool = None
+    INTERFACE_DEFAULT_MODE: Literal['switched', 'routed'] = None
 
 
 class TemplarBase:

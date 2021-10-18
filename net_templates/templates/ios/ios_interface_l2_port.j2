@@ -1,4 +1,4 @@
-{% if params is defined %}
+{% if params | default(none) is not none %}
 {%   if params.mode %}
 {%     if params.mode == "access" %}
  switchport mode access

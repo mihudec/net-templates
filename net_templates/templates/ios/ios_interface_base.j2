@@ -5,6 +5,7 @@
 {%   set name, params = name, params %}
 {% endif %}
 interface {{ name }}
+{% include 'ios_interface_mode.j2' %}
 {% if params.description | default(none) is not none %}
  description {{ params.description }}
 {% endif %}
@@ -19,12 +20,12 @@ interface {{ name }}
 {% if params.mtu | default(none) is not none %}
  mtu {{ params.mtu }}
 {% endif %}
-{% if params.l2_port is defined and params.l2_port is mapping %}
+{% if params.l2_port | default(none) is not none and 'lag-member' not in params.tags | default([]) %}
 {%   with params = params.l2_port %}
 {%     include 'ios_interface_l2_port.j2' %}
 {%   endwith %}
 {% endif %}
-{% if params.l3_port is defined and params.l3_port is mapping %}
+{% if params.l3_port | default(none) is not none %}
 {%   with params = params.l3_port %}
 {%     include 'ios_interface_l3_port.j2' %}
 {%   endwith %}

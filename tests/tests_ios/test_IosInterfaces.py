@@ -10,7 +10,7 @@ from net_models.models.interfaces import (
     InterfaceLagMemberConfig
 )
 from net_models.models.interfaces.L3InterfaceModels import (
-    InterfaceRouteportModel,
+    InterfaceRouteportModel, InterfaceIPv4Container, InterfaceIPv4Address,
     InterfaceIsisConfig, IsisMetricField, IsisInterfaceAuthentication,
     InterfaceOspfConfig, InterfaceOspfAuthentication, KeyOspf, InterfaceOspfTimers,
     InterfaceHsrp
@@ -669,6 +669,100 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
             }
 
         ]
+        super().common_testbase(test_cases=test_cases)
+
+    def test_interface_mode(self):
+        test_cases = [
+            {
+                "test_name": "Test-Switched-Platform-01",
+                "data": {
+                    "INTERFACE_DEFAULT_MODE": 'switched',
+                    "params": {
+                        "GigabitEthernet1/0/1": InterfaceModel(
+                            name="GigabitEthernet1/0/1",
+                            l2_port=InterfaceSwitchportModel(mode='access')
+                        ),
+                        "TenGigabitEthernet1/1/1": InterfaceModel(
+                            name="GigabitEthernet1/0/1",
+                            l3_port=InterfaceRouteportModel(
+                                ipv4=InterfaceIPv4Container(
+                                    addresses=[
+                                        InterfaceIPv4Address(address="192.0.2.13/30")
+                                    ]
+                                )
+                            )
+                        ),
+                        "Loopback0": InterfaceModel(
+                            name="Loopback0",
+                            l3_port=InterfaceRouteportModel(
+                                ipv4=InterfaceIPv4Container(
+                                    addresses=[
+                                        InterfaceIPv4Address(address="192.0.2.1/32")
+                                    ]
+                                )
+                            )
+                        )
+                    }
+                },
+                "result": (
+                    "interface GigabitEthernet1/0/1\n"
+                    " switchport mode access\n"
+                    "!\n"
+                    "interface TenGigabitEthernet1/1/1\n"
+                    " no switchport\n"
+                    " ip address 192.0.2.13 255.255.255.252\n"
+                    "!\n"
+                    "interface Loopback0\n"
+                    " ip address 192.0.2.1 255.255.255.255\n"
+                    "!\n"
+                )
+            },
+            {
+                "test_name": "Test-Routed-Platform-01",
+                "data": {
+                    "INTERFACE_DEFAULT_MODE": 'routed',
+                    "params": {
+                        "GigabitEthernet1/0/1": InterfaceModel(
+                            name="GigabitEthernet1/0/1",
+                            l2_port=InterfaceSwitchportModel(mode='access')
+                        ),
+                        "TenGigabitEthernet1/1/1": InterfaceModel(
+                            name="GigabitEthernet1/0/1",
+                            l3_port=InterfaceRouteportModel(
+                                ipv4=InterfaceIPv4Container(
+                                    addresses=[
+                                        InterfaceIPv4Address(address="192.0.2.13/30")
+                                    ]
+                                )
+                            )
+                        ),
+                        "Loopback0": InterfaceModel(
+                            name="Loopback0",
+                            l3_port=InterfaceRouteportModel(
+                                ipv4=InterfaceIPv4Container(
+                                    addresses=[
+                                        InterfaceIPv4Address(address="192.0.2.1/32")
+                                    ]
+                                )
+                            )
+                        )
+                    }
+                },
+                "result": (
+                    "interface GigabitEthernet1/0/1\n"
+                    " switchport\n"
+                    " switchport mode access\n"
+                    "!\n"
+                    "interface TenGigabitEthernet1/1/1\n"
+                    " ip address 192.0.2.13 255.255.255.252\n"
+                    "!\n"
+                    "interface Loopback0\n"
+                    " ip address 192.0.2.1 255.255.255.255\n"
+                    "!\n"
+                )
+            }
+        ]
+        print(test_cases[0]['data'])
         super().common_testbase(test_cases=test_cases)
 
     def test_lag(self):
