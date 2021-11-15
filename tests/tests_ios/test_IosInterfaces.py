@@ -671,7 +671,7 @@ class TestIosInterfaceAll(BaseTemplateTestIos):
         ]
         super().common_testbase(test_cases=test_cases)
 
-    def test_interface_mode(self):
+    def test_interface_model(self):
         test_cases = [
             {
                 "test_name": "Test-Switched-Platform-01",
