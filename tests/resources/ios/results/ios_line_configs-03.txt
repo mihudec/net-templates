@@ -1,0 +1,6 @@
+line vty 0 4
+ exec-timeout 10 0
+ access-class ACL-VTY in vrf-also
+line vty 5 63
+ exec-timeout 10 0
+ access-class ACL-VTY in vrf-also

@@ -13,5 +13,15 @@ class TestIosLineConfig(BaseTemplateTestIos):
         super().common_testbase(test_cases=test_cases)
 
 
+class TestIosLineConfigs(BaseTemplateTestIos):
+
+    TEST_CLASS = IosLineConfig
+    TEMPLATE_NAME = 'ios_line_configs'
+
+    def test_resources(self):
+        test_cases = self.get_test_cases_from_resources()
+        super().common_testbase(test_cases=test_cases)
+
+
 if __name__ == '__main__':
     unittest.main()

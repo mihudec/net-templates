@@ -1,0 +1,7 @@
+{% if params | default(none) is not none %}
+{%   for item in params %}
+{%     with params=item %}
+{%       include 'ios_line_config.j2' %}
+{%     endwith %}
+{%   endfor %}
+{% endif %}

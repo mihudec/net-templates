@@ -10,4 +10,10 @@ line {{ params.line_type }} {{ params.line_range[0] }}{% if params.line_range | 
 {%       include 'ios_line_aaa.j2' %}
 {%     endwith %}
 {%   endif %}
+{# ACL Section #}
+{%   if params.access_classes | default(none) is not none %}
+{%     for access_class in params.access_classes %}
+ access-class {{ access_class.name }} {{ access_class.direction }}{% if access_class.vrf_also | default(none) is sameas true %} vrf-also{% elif access_class.vrf | default(none) is string %} vrf {{ access_class.vrf }}{% endif +%}
+{%     endfor %}
+{%   endif %}
 {% endif %}

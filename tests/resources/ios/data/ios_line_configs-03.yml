@@ -1,0 +1,16 @@
+---
+params:
+  - line_type: vty
+    line_range: [0, 4]
+    exec_timeout: 600
+    access_classes:
+      - name: ACL-VTY
+        direction: in
+        vrf_also: True
+  - line_type: vty
+    line_range: [5, 63]
+    exec_timeout: 600
+    access_classes:
+      - name: ACL-VTY
+        direction: in
+        vrf_also: True
