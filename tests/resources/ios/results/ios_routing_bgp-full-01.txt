@@ -21,6 +21,7 @@ router bgp 64496
  address-family vpnv4
   bgp additional-paths install
   neighbor iBGP-RR send-community both
+  neighbor iBGP-RR route-reflector-client
   neighbor 192.0.2.2 activate
   neighbor 192.0.2.3 activate
  exit-address-family

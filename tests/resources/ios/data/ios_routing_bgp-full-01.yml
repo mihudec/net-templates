@@ -32,6 +32,7 @@ bgp_params:
       peer_groups:
         - name: iBGP-RR
           send_community: both
+          rr_client: true
     - afi: ipv4
       vrf: VRF-A
       redistribute:
